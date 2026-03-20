@@ -63,9 +63,26 @@ function FeatureCardTrailing({ trailing }) {
   return null;
 }
 
-export function FeatureCard({ title, badge, message, trailing }) {
+export function FeatureCard({ title, badge, message, trailing, size }) {
+  const cardStyle = {
+    "--feature-card-min-height": "auto",
+    "--feature-card-max-height": "none",
+  };
+
+  if (size?.minHeight) {
+    cardStyle["--feature-card-min-height"] = size.minHeight;
+  }
+
+  if (size?.maxHeight) {
+    cardStyle["--feature-card-max-height"] = size.maxHeight;
+  }
+
   return (
-    <SectionCard contentClassName="flex items-center justify-between gap-4 p-6">
+    <SectionCard
+      className="min-h-[var(--feature-card-min-height)] max-h-[var(--feature-card-max-height)]"
+      contentClassName="flex h-full items-center justify-between gap-4 p-6"
+      style={cardStyle}
+    >
       <div className="space-y-2">
         <CardTitle title={title} badge={badge} />
         <CardDescription message={message} />

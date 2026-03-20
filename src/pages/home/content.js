@@ -6,11 +6,8 @@ export const homePageContent = {
   layout: {
     headerHeight: "11.5rem",
     footerHeight: "6.5rem",
-    contentTopSpacing: "2.5rem",
+    contentTopSpacing: "2rem",
     contentBottomSpacing: "2rem",
-    featuredSectionMinHeight: "0px",
-    carouselSectionMinHeight: "0px",
-    favoritesSectionMinHeight: "0px",
   },
   profile: {
     name: "박강현",
@@ -33,6 +30,10 @@ export const homePageContent = {
       title: "전체공지",
       badge: "N",
       message: "[5월 치킨알바 공지]",
+      size: {
+        minHeight: "7rem",
+        maxHeight: "none",
+      },
       trailing: {
         type: "icon",
         icon: "bell",
@@ -42,6 +43,10 @@ export const homePageContent = {
       id: "points",
       title: "상벌점 누계",
       message: "이번주는 벌점이 없습니다",
+      size: {
+        minHeight: "7rem",
+        maxHeight: "none",
+      },
       trailing: {
         type: "value",
         value: "34pt",
