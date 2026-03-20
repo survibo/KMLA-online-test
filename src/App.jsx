@@ -1,7 +1,7 @@
-import MobileHomeShadcnMockup from "./test"
+import HomePage from "./pages/home";
 
 function App() {
-  return <MobileHomeShadcnMockup />
+  return <HomePage />;
 }
 
-export default App
+export default App;
