@@ -1,5 +1,7 @@
+import MobileHomeShadcnMockup from "./test"
+
 function App() {
-  return <></>
+  return <MobileHomeShadcnMockup />
 }
 
 export default App
