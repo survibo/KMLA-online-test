@@ -1,5 +1,6 @@
 import { createBrowserRouter, Link, Navigate, Outlet, RouterProvider } from "react-router-dom"
 
+import { FontScaleControl } from "@/components/font-scale-control"
 import { Example } from "./Example"
 import {
   ScenarioBlockPreview,
@@ -8,7 +9,12 @@ import {
 } from "./ScenarioPreview"
 
 function AppLayout() {
-  return <Outlet />
+  return (
+    <>
+      <Outlet />
+      <FontScaleControl />
+    </>
+  )
 }
 
 function HomePage() {

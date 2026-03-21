@@ -83,7 +83,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
                 ) : null}
 
                 {!isOwn && startsNewBlock ? (
-                  <div className="mb-0.5 pl-13 text-[13px] font-normal text-zinc-500">
+                  <div className="mb-0.5 pl-13 text-[0.8125rem] font-normal text-zinc-500">
                     {message.sender.name}
                   </div>
                 ) : null}
@@ -110,7 +110,7 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
 
                     <div
                       className={cn(
-                        "inline-block max-w-full px-4 py-2.5 text-[15px] leading-[1.45] shadow-none",
+                        "inline-block max-w-full px-4 py-2.5 text-[0.9375rem] leading-[1.45] shadow-none",
                         startsNewBlock
                           ? "rounded-t-[22px]"
                           : isOwn

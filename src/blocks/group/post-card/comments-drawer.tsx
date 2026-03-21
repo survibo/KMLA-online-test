@@ -294,7 +294,7 @@ export function GroupPostCommentsDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="mx-auto flex w-full max-w-[800px] flex-col rounded-t-[1.75rem] bg-white data-[vaul-drawer-direction=bottom]:max-h-[88vh]">
+      <DrawerContent className="mx-auto flex w-full max-w-[800px] flex-col rounded-t-[1.75rem] bg-white data-[vaul-drawer-direction=bottom]:min-h-[60vh] data-[vaul-drawer-direction=bottom]:max-h-[90vh]">
         <DrawerHeader className="px-4 pb-3 pt-5 text-left sm:px-6">
           <DrawerTitle className="text-lg font-semibold text-zinc-950">
             댓글
