@@ -204,7 +204,7 @@ export function GroupPostCard({
     <>
       <article
         className={cn(
-          "w-full border-b border-zinc-200 bg-white text-zinc-950",
+          "w-full border-b-2 border-zinc-300 bg-white text-zinc-950",
           className
         )}
       >
@@ -219,7 +219,7 @@ export function GroupPostCard({
             {post.title || post.content ? (
               <div>
                 {post.title ? (
-                  <h2 className="text-[1.5rem] leading-[1.08] font-bold tracking-[-0.03em] text-zinc-950">
+                  <h2 className="text-[1.35rem] leading-[1.12] font-bold tracking-[-0.03em] text-zinc-950">
                     {post.title}
                   </h2>
                 ) : null}

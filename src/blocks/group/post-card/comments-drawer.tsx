@@ -294,7 +294,7 @@ export function GroupPostCommentsDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="mx-auto flex w-full max-w-[800px] flex-col rounded-t-[1.75rem] bg-white">
+      <DrawerContent className="mx-auto flex w-full max-w-[800px] flex-col rounded-t-[1.75rem] bg-white data-[vaul-drawer-direction=bottom]:max-h-[88vh]">
         <DrawerHeader className="px-4 pb-3 pt-5 text-left sm:px-6">
           <DrawerTitle className="text-lg font-semibold text-zinc-950">
             댓글
@@ -303,7 +303,7 @@ export function GroupPostCommentsDrawer({
 
         <Separator className="bg-zinc-200" />
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-7 pt-4 sm:px-6 sm:pb-8">
           {commentItems.length > 0 ? (
             <GroupCommentThread
               commentItems={commentItems}
@@ -316,7 +316,7 @@ export function GroupPostCommentsDrawer({
           )}
         </div>
 
-        <div className="border-t border-zinc-200 px-4 py-4 sm:px-6">
+        <div className="border-t border-zinc-200 bg-white px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:px-6">
           <div
             ref={composerRef}
             className="flex flex-col gap-3"
@@ -339,16 +339,16 @@ export function GroupPostCommentsDrawer({
               onChange={(event) => setDraftComment(event.target.value)}
               className="min-h-10 rounded-2xl border-zinc-200 bg-zinc-50 px-4 py-3 text-sm shadow-none focus-visible:border-zinc-300 focus-visible:ring-2 focus-visible:ring-zinc-200"
             />
-            {shouldShowSubmitButton ? (
-              <div className="flex justify-end">
+            <div className="flex min-h-9 justify-end">
+              {shouldShowSubmitButton ? (
                 <Button
                   type="button"
                   className="rounded-full bg-emerald-500 px-4 text-white hover:bg-emerald-600"
                 >
                   댓글 작성
                 </Button>
-              </div>
-            ) : null}
+              ) : null}
+            </div>
           </div>
         </div>
       </DrawerContent>

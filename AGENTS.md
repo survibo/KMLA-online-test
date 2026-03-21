@@ -280,6 +280,36 @@ mock을 반드시 다시 점검해야 하는 경우:
 - 범용 상호작용은 `shadcn/ui`
 - 서비스 표현은 block 조합
 
+## Router Rule
+
+라우팅은 당분간 파일 기반 라우팅보다 명시적 route 설정 파일 방식을 우선한다.
+
+현재 기준:
+
+- route 정의는 별도 파일에서 한 번에 관리한다.
+- 예: `src/routes.jsx`
+- 폴더명이나 파일명을 URL 구조로 자동 매핑하는 방식은 기본 선택지로 두지 않는다.
+- route는 읽기 쉬운 수동 선언을 우선하고, 필요할 때만 중첩 구조를 추가한다.
+
+시나리오 preview 라우팅 원칙:
+
+- 시나리오 선택 화면과 실제 block 화면을 분리한다.
+- 시나리오 진입 전 목록 화면에서 block과 scenario를 먼저 고르게 한다.
+- block 안으로 들어간 뒤에는 preview 전용 wrapper를 최소화하고 실제 화면과 최대한 동일하게 보여준다.
+- 즉, block route에 들어간 뒤에는 "테스트 UI"보다 "실제 화면 재현"을 우선한다.
+
+권장 흐름:
+
+- domain 목록 페이지
+- domain 내부 block 목록 페이지
+- scenario를 고른 뒤 실제 block 화면으로 진입
+
+예:
+
+- `/scenarios`
+- `/scenarios/group`
+- `/scenarios/group/post-card?scenario=2`
+
 ## Block Structure
 
 block 기본 구조:
