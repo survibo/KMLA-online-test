@@ -1,13 +1,8 @@
 import {
-  activeGroupPostDetailScenario,
-} from "@/blocks/group-post/detail/mock.scenarios"
-import { GroupPostDetail } from "@/blocks/group-post/detail"
+  activeChatRoomScenario,
+} from "@/blocks/chat/room/mock.scenarios"
+import { ChatRoom } from "@/blocks/chat/room"
 
 export function Example() {
-  return (
-    <GroupPostDetail
-      post={activeGroupPostDetailScenario.post}
-      commentItems={activeGroupPostDetailScenario.commentItems}
-    />
-  )
+  return <ChatRoom data={activeChatRoomScenario.data} />
 }

@@ -175,14 +175,67 @@ mock data는 단순 샘플이 아니라 실제 응답을 흉내 내는 테스트
 - 스키마에 있는 캐시 컬럼은 mock에도 반영한다.
 - 화면 로직이 그 mock만 보고도 실제 흐름을 검증할 수 있어야 한다.
 
-구조 규칙:
+핵심 원칙:
 
-- `mock.ts`는 "재료" 파일이다.
-- `mock.ts`에는 base mock과 생성 helper만 둔다.
-- `mock.scenarios.ts`는 "완성된 실험 케이스" 파일이다.
-- 실험용 변형은 `mock.scenarios.ts`에 둔다.
-- base mock은 실제 응답에 가깝게 유지한다.
-- edge case는 scenario에서 표현한다.
+- mock도 데이터 계층을 나눠서 생각한다.
+- 가능한 한 raw data와 UI 전용 계산값을 섞지 않는다.
+- mock은 "화면용 더미"가 아니라 "실제 응답을 흉내 낸 재료 + 그 재료를 가공한 결과"로 본다.
+
+권장 기본 흐름:
+
+- `raw mock data -> block mock projection -> mock scenario`
+
+각 단계의 의미:
+
+- raw mock data:
+  실제 스키마나 API 응답에 최대한 가까운 원재료
+- block mock projection:
+  raw mock을 block이 바로 쓸 수 있는 구조로 가공한 값
+- mock scenario:
+  특정 상태를 보기 위해 raw mock 일부를 바꾸고 projection을 다시 계산한 완성 케이스
+
+도메인 단위 mock 권장 구조:
+
+- 여러 block이 같은 데이터를 공유하면 각 block마다 base mock을 따로 복제하지 않는다.
+- 이런 경우 도메인 루트에 schema-aligned raw mock data를 둔다.
+- 예: `src/blocks/<domain>/mock.ts`
+- 도메인 루트 `mock.ts`에는 users, rooms, members, messages 같은 raw data와 이를 조회하거나 계산하는 helper를 둔다.
+- 이때 도메인 루트 `mock.ts`와 block 내부 `mock.ts`는 파일 이름만 같고 역할은 다르다.
+- 이 raw mock은 가능한 한 실제 DB/API shape와 비슷하게 유지한다.
+- raw mock에는 가능하면 join 결과나 화면 전용 계산값을 미리 넣지 않는다.
+- 다만 프론트 실험에 꼭 필요하면 제한적으로 join 결과를 둘 수는 있다.
+- 이런 경우에도 unread, latest item, display text, 정렬 결과 같은 파생값은 raw mock이 아니라 projection에서 계산한다.
+- 예를 들어 unread 여부, latest item, display text, 정렬 결과 같은 값은 raw mock이 아니라 projection에서 계산한다.
+
+block 파일 역할:
+
+- 도메인 루트 `mock.ts`:
+  raw mock data와 도메인 공용 selector/helper
+- block의 `mock.ts`:
+  raw mock을 block props에 맞는 projection으로 가공하는 파일
+- block의 `mock.scenarios.ts`:
+  raw mock override 또는 projection 조합으로 완성된 실험 케이스를 만드는 파일
+
+반드시 지킬 것:
+
+- block의 `mock.ts`는 raw data를 새로 복제해 독립적으로 들고 있지 않는다.
+- block의 `mock.ts`는 "렌더링 직전 형태"를 계산하는 역할에 집중한다.
+- `mock.scenarios.ts`는 가능하면 raw mock 일부만 바꾸고, 마지막에 projection helper를 다시 호출해 결과를 만든다.
+- scenario 파일에서 raw와 projection 둘 다 보관할지 말지는 선택할 수 있다.
+- 다만 어떤 경우에도 projection 계산 경로는 한 곳으로 유지한다.
+- 즉, scenario마다 직접 계산식을 흩뿌리지 말고 기존 projection helper를 다시 호출한다.
+- edge case는 base mock을 오염시키지 말고 scenario에서 표현한다.
+- block이 사실상 단독으로만 쓰이고 아직 도메인 공용 데이터가 필요 없을 때만 block 내부 base mock으로 시작해도 된다.
+- 하지만 같은 도메인 안에서 두 번째 block부터는 도메인 루트 raw mock 구조를 우선 검토한다.
+
+추천 판단 기준:
+
+- 하나의 block만 보는 짧은 실험:
+  block 내부 base mock으로 시작해도 된다.
+- 같은 도메인에서 여러 block이 같은 엔티티를 공유:
+  도메인 루트 raw mock 구조를 우선 사용한다.
+- unread, latest item, summary text, count, 정렬 같은 파생값이 중요:
+  반드시 projection helper에서 계산한다.
 
 이름 규칙:
 
@@ -196,6 +249,7 @@ mock을 반드시 다시 점검해야 하는 경우:
 - 스키마가 바뀐 경우
 - 타입이 바뀐 경우
 - 렌더링 로직이 새 필드를 기대하는 경우
+- raw mock과 projection 규칙이 어긋난 경우
 
 ## UI Rule
 
@@ -244,6 +298,7 @@ src/blocks/<block-name>/
 ```text
 src/blocks/<domain>/
   README.md
+  mock.ts 필요시
   shared.tsx 필요시
   types.ts 필요시
   styles.css 필요시
@@ -281,6 +336,7 @@ src/blocks/<domain>/
 공용 파일 예:
 
 - 공통 타입: `src/blocks/group-post/types.ts`
+- 공통 raw mock: `src/blocks/chat/mock.ts`
 - 공통 UI 조각: `src/blocks/group-post/shared.tsx`
 - 공통 스타일 토큰: `src/blocks/group-post/styles.css`
 - 공용 시간 포맷터: `src/lib/datetime.ts`

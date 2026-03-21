@@ -1,0 +1,5 @@
+.chat-room-avatar-group {
+  background:
+    radial-gradient(circle at top, rgba(245, 158, 11, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(255, 251, 235, 0.95), rgba(255, 247, 237, 0.92));
+}

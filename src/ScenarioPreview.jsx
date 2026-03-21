@@ -1,5 +1,16 @@
 import { useEffect, useState } from "react"
 
+import { ChatRoomCard } from "@/blocks/chat/room-card"
+import {
+  baseChatRoomCardCurrentUserId,
+} from "@/blocks/chat/room-card/mock"
+import { chatRoomCardScenarios } from "@/blocks/chat/room-card/mock.scenarios"
+import { ChatMessage } from "@/blocks/chat/message"
+import { chatMessageScenarios } from "@/blocks/chat/message/mock.scenarios"
+import { ChatRoom } from "@/blocks/chat/room"
+import { chatRoomScenarios } from "@/blocks/chat/room/mock.scenarios"
+import { ChatRoomList } from "@/blocks/chat/room-list"
+import { chatRoomListScenarios } from "@/blocks/chat/room-list/mock.scenarios"
 import { GroupPostCard } from "@/blocks/group-post/card"
 import { groupPostCardScenarios } from "@/blocks/group-post/card/mock.scenarios"
 import { GroupPostDetail } from "@/blocks/group-post/detail"
@@ -9,6 +20,39 @@ import { groupPostListScenarios } from "@/blocks/group-post/list/mock.scenarios"
 import { Button } from "@/components/ui/button"
 
 const scenarioGroups = [
+  {
+    id: "chat-room-card",
+    label: "Chat Room Card",
+    scenarios: chatRoomCardScenarios,
+    render: (scenario) => (
+      <div className="min-h-screen bg-white px-4 py-8 sm:px-6">
+        <div className="mx-auto max-w-xl">
+          <ChatRoomCard
+            room={scenario.room}
+            currentUserId={scenario.currentUserId ?? baseChatRoomCardCurrentUserId}
+          />
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "chat-room-list",
+    label: "Chat Room List",
+    scenarios: chatRoomListScenarios,
+    render: (scenario) => <ChatRoomList data={scenario.data} />,
+  },
+  {
+    id: "chat-message",
+    label: "Chat Message",
+    scenarios: chatMessageScenarios,
+    render: (scenario) => <ChatMessage data={scenario.data} />,
+  },
+  {
+    id: "chat-room",
+    label: "Chat Room",
+    scenarios: chatRoomScenarios,
+    render: (scenario) => <ChatRoom data={scenario.data} />,
+  },
   {
     id: "card",
     label: "Group Post Card",
