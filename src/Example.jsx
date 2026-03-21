@@ -1,13 +1,13 @@
 import {
-  defaultGroupPostDetailScenario,
+  activeGroupPostDetailScenario,
 } from "@/blocks/group-post-detail/mock.scenarios"
 import { GroupPostDetail } from "@/blocks/group-post-detail"
 
 export function Example() {
   return (
     <GroupPostDetail
-      post={defaultGroupPostDetailScenario.post}
-      commentItems={defaultGroupPostDetailScenario.commentItems}
+      post={activeGroupPostDetailScenario.post}
+      commentItems={activeGroupPostDetailScenario.commentItems}
     />
   )
 }

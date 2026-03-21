@@ -42,6 +42,27 @@
 - 특정 도메인에만 해당하면 도메인 문서
 - 특정 block에만 해당하면 해당 block의 `README.md`
 
+## Naming Rule
+
+그룹 게시글 관련 block은 `community` 대신 `group` 접두어를 사용한다.
+
+예:
+
+- `group-post-card`
+- `group-post-detail`
+- `group-post-list`
+- `GroupPost`
+- `GroupComment`
+
+공용 조각도 같은 기준을 따른다.
+
+예:
+
+- `group-post-types.ts`
+- `group-post-shared.tsx`
+- `GroupPostHeader`
+- `GroupPostStats`
+
 ## Working Style
 
 작업은 아래 순서를 기본으로 한다.
@@ -103,6 +124,11 @@ mock data는 단순 샘플이 아니라 실제 응답을 흉내 내는 테스트
 - 실험용 변형은 `mock.scenarios.ts` 같은 별도 파일에 둔다.
 - base mock은 실제 응답에 가깝게 유지하고, edge case 실험은 scenario에서 표현한다.
 - scenario 이름만 봐도 무엇을 검증하는지 알 수 있어야 한다.
+- `mock.ts`는 "재료", `mock.scenarios.ts`는 "완성된 실험 케이스" 역할로 나눈다.
+- 가능하면 `sample...`보다 `base...`, `create...`, `active...Scenario` 이름을 우선한다.
+- `mock.scenarios.ts`에는 이름 있는 scenario 상수를 먼저 만들고, 필요하면 배열로 묶는다.
+- preview에서 바로 바꿔볼 수 있도록 `active...ScenarioIndex`와 `active...Scenario`를 둘 수 있다.
+- `active...ScenarioIndex` 옆에는 가능한 인덱스 범위와 총 scenario 개수를 주석으로 남긴다.
 
 mock을 점검해야 하는 경우:
 
@@ -163,6 +189,19 @@ src/blocks/<block-name>/
 `mock.scenarios.ts`는 선택 사항이지만, mock을 바꿔가며 자주 실험하는 block이면 두는 쪽을 권장한다.
 
 공통 타입이나 공용 조각은 block 바깥으로 분리할 수 있다.
+
+예:
+
+- 공통 타입: `src/blocks/group-post-types.ts`
+- 공통 UI 조각: `src/blocks/group-post-shared.tsx`
+- 공용 시간 포맷터: `src/lib/datetime.ts`
+
+시간 표시는 raw ISO 문자열을 직접 뿌리지 말고 공용 formatter를 우선 사용한다.
+
+예:
+
+- 절대 시각: `formatIsoDateTime`
+- 상대 시각: `formatRelativeTime`
 
 ## Block Change Rule
 

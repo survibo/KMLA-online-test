@@ -253,7 +253,3 @@ export function createGroupPostDetailComments(
 ) {
   return comments.map(cloneComment)
 }
-
-export const sampleGroupPostDetailPost = createGroupPostDetailPost()
-export const sampleGroupPostDetailComments =
-  createGroupPostDetailComments()

@@ -31,17 +31,26 @@
 ## Files
 
 - `index.tsx`: 그룹별 게시글 목록 block 본체
-- `mock.ts`: `group-post-card` mock을 재사용한 그룹 목록용 샘플 데이터
+- `mock.ts`: 기준 group fixture와 카드 기반 생성 helper
+- `mock.scenarios.ts`: 목록 밀도 실험용 시나리오
 - `types.ts`: 그룹 목록용 타입
 - `README.md`: 목록 block 규칙과 사용법
+
+## Mock Workflow
+
+mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
+
+1. `mock.ts`는 base group fixture와 `group-post-card` 기반 생성 helper만 둔다.
+2. 목록 길이나 밀도 실험은 `mock.scenarios.ts`에 이름 있는 scenario로 추가한다.
+3. preview에서 볼 케이스는 `active...Scenario` 하나만 고르면 되게 유지한다.
 
 ## Example
 
 ```tsx
 import { GroupPostList } from "@/blocks/group-post-list"
-import { sampleGroupPostListGroup } from "@/blocks/group-post-list/mock"
+import { activeGroupPostListScenario } from "@/blocks/group-post-list/mock.scenarios"
 
 export function Example() {
-  return <GroupPostList group={sampleGroupPostListGroup} />
+  return <GroupPostList group={activeGroupPostListScenario.group} />
 }
 ```

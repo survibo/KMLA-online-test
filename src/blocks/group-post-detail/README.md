@@ -76,15 +76,15 @@ mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 
 ```tsx
 import {
-  defaultGroupPostDetailScenario,
+  activeGroupPostDetailScenario,
 } from "@/blocks/group-post-detail/mock.scenarios"
 import { GroupPostDetail } from "@/blocks/group-post-detail"
 
 export function Example() {
   return (
     <GroupPostDetail
-      post={defaultGroupPostDetailScenario.post}
-      commentItems={defaultGroupPostDetailScenario.commentItems}
+      post={activeGroupPostDetailScenario.post}
+      commentItems={activeGroupPostDetailScenario.commentItems}
     />
   )
 }

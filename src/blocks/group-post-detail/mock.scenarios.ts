@@ -49,74 +49,84 @@ const discussionReply: GroupPostDetailCommentData = {
   comment_reactions: [],
 }
 
+export const groupPostDetailDefaultScenario: GroupPostDetailScenario = {
+  id: "default",
+  label: "기본",
+  description: "현재 샘플과 동일한 기본 상세 상태",
+  post: createGroupPostDetailPost(),
+  commentItems: createGroupPostDetailComments(),
+}
+
+export const groupPostDetailNoImagesScenario: GroupPostDetailScenario = {
+  id: "no-images",
+  label: "이미지 없음",
+  description: "텍스트만 있는 게시글 레이아웃 확인용",
+  post: createGroupPostDetailPost({
+    post_images: [],
+    title: "학생회비 사용 내역 안내",
+    content:
+      "이번 달 학생회비 사용 내역을 정리했습니다.\n첨부 이미지는 없고 텍스트 흐름만 확인하는 시나리오입니다.",
+  }),
+  commentItems: createGroupPostDetailComments(),
+}
+
+export const groupPostDetailHeavyDiscussionScenario: GroupPostDetailScenario = {
+  id: "heavy-discussion",
+  label: "댓글 많은 글",
+  description: "최상위 댓글과 답글이 더 많은 상태를 보는 시나리오",
+  post: createGroupPostDetailPost({
+    comment_count: 2,
+    reaction_count: 11,
+    post_reactions: [
+      ...baseGroupPostDetailPost.post_reactions!,
+      {
+        id: "1706dedb-3c52-4d76-b47f-d05059bca652",
+        post_id: baseGroupPostDetailPost.id,
+        user_id: "c2ecfe2d-e2e2-4808-ac65-f2014cf03efa",
+        type: "laugh",
+        created_at: "2026-03-20T15:22:00+09:00",
+      },
+      {
+        id: "cca1f973-7eca-41d5-ac1e-6a3d084ccf46",
+        post_id: baseGroupPostDetailPost.id,
+        user_id: "890aa09e-7a2f-4963-bd48-e7214efd2a0d",
+        type: "wow",
+        created_at: "2026-03-20T15:23:00+09:00",
+      },
+    ],
+  }),
+  commentItems: createGroupPostDetailComments([
+    ...baseGroupPostDetailComments,
+    discussionComment,
+    discussionReply,
+  ]),
+}
+
+export const groupPostDetailMissingCacheScenario: GroupPostDetailScenario = {
+  id: "missing-cache-counts",
+  label: "캐시 없음",
+  description: "count 캐시 없이 fallback 렌더링을 확인하는 시나리오",
+  post: createGroupPostDetailPost({
+    comment_count: undefined,
+    reaction_count: undefined,
+  }),
+  commentItems: createGroupPostDetailComments(
+    baseGroupPostDetailComments.map((comment) =>
+      comment.parent_id === null
+        ? { ...comment, reply_count: undefined }
+        : comment
+    )
+  ),
+}
+
 export const groupPostDetailScenarios: GroupPostDetailScenario[] = [
-  {
-    id: "default",
-    label: "기본",
-    description: "현재 샘플과 동일한 기본 상세 상태",
-    post: createGroupPostDetailPost(),
-    commentItems: createGroupPostDetailComments(),
-  },
-  {
-    id: "no-images",
-    label: "이미지 없음",
-    description: "텍스트만 있는 게시글 레이아웃 확인용",
-    post: createGroupPostDetailPost({
-      post_images: [],
-      title: "학생회비 사용 내역 안내",
-      content:
-        "이번 달 학생회비 사용 내역을 정리했습니다.\n첨부 이미지는 없고 텍스트 흐름만 확인하는 시나리오입니다.",
-    }),
-    commentItems: createGroupPostDetailComments(),
-  },
-  {
-    id: "heavy-discussion",
-    label: "댓글 많은 글",
-    description: "최상위 댓글과 답글이 더 많은 상태를 보는 시나리오",
-    post: createGroupPostDetailPost({
-      comment_count: 2,
-      reaction_count: 11,
-      post_reactions: [
-        ...baseGroupPostDetailPost.post_reactions!,
-        {
-          id: "1706dedb-3c52-4d76-b47f-d05059bca652",
-          post_id: baseGroupPostDetailPost.id,
-          user_id: "c2ecfe2d-e2e2-4808-ac65-f2014cf03efa",
-          type: "laugh",
-          created_at: "2026-03-20T15:22:00+09:00",
-        },
-        {
-          id: "cca1f973-7eca-41d5-ac1e-6a3d084ccf46",
-          post_id: baseGroupPostDetailPost.id,
-          user_id: "890aa09e-7a2f-4963-bd48-e7214efd2a0d",
-          type: "wow",
-          created_at: "2026-03-20T15:23:00+09:00",
-        },
-      ],
-    }),
-    commentItems: createGroupPostDetailComments([
-      ...baseGroupPostDetailComments,
-      discussionComment,
-      discussionReply,
-    ]),
-  },
-  {
-    id: "missing-cache-counts",
-    label: "캐시 없음",
-    description: "count 캐시 없이 fallback 렌더링을 확인하는 시나리오",
-    post: createGroupPostDetailPost({
-      comment_count: undefined,
-      reaction_count: undefined,
-    }),
-    commentItems: createGroupPostDetailComments(
-      baseGroupPostDetailComments.map((comment) =>
-        comment.parent_id === null
-          ? { ...comment, reply_count: undefined }
-          : comment
-      )
-    ),
-  },
+  groupPostDetailDefaultScenario,
+  groupPostDetailNoImagesScenario,
+  groupPostDetailHeavyDiscussionScenario,
+  groupPostDetailMissingCacheScenario,
 ]
 
-export const defaultGroupPostDetailScenario =
-  groupPostDetailScenarios[0]
+export const activeGroupPostDetailScenarioIndex = 3 // 0 ~ 3, total 4 scenarios
+
+export const activeGroupPostDetailScenario =
+  groupPostDetailScenarios[activeGroupPostDetailScenarioIndex]

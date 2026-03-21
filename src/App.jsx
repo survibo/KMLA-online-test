@@ -1,7 +1,7 @@
-import { Example } from "./Example"
+import { ScenarioPreview } from "./ScenarioPreview"
 
 function App() {
-  return <Example />
+  return <ScenarioPreview />
 }
 
 export default App

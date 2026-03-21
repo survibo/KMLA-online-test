@@ -59,10 +59,10 @@ mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 ```tsx
 import { GroupPostCard } from "@/blocks/group-post-card"
 import {
-  sampleGroupPostCardScenario,
+  activeGroupPostCardScenario,
 } from "@/blocks/group-post-card/mock.scenarios"
 
 export function Example() {
-  return <GroupPostCard post={sampleGroupPostCardScenario.post} />
+  return <GroupPostCard post={activeGroupPostCardScenario.post} />
 }
 ```

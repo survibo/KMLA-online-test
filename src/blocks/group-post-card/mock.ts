@@ -71,5 +71,3 @@ export function createGroupPostCardPost(
     )?.map((reaction) => ({ ...reaction })),
   }
 }
-
-export const sampleGroupPostCardPost = createGroupPostCardPost()
