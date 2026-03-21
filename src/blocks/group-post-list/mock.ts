@@ -1,18 +1,18 @@
-import { sampleCommunityPostCardPost } from "@/blocks/community-post-card/mock"
-import type { CommunityPostListGroup } from "./types"
+import { sampleGroupPostCardPost } from "@/blocks/group-post-card/mock"
+import type { GroupPostListGroup } from "./types"
 
 function clonePostForList(id: string, createdAt: string) {
   return {
-    ...sampleCommunityPostCardPost,
+    ...sampleGroupPostCardPost,
     id,
     created_at: createdAt,
-    author: { ...sampleCommunityPostCardPost.author },
-    post_images: sampleCommunityPostCardPost.post_images?.map((image) => ({
+    author: { ...sampleGroupPostCardPost.author },
+    post_images: sampleGroupPostCardPost.post_images?.map((image) => ({
       ...image,
       id: `${image.id}-${id}`,
       post_id: id,
     })),
-    post_reactions: sampleCommunityPostCardPost.post_reactions?.map((reaction) => ({
+    post_reactions: sampleGroupPostCardPost.post_reactions?.map((reaction) => ({
       ...reaction,
       id: `${reaction.id}-${id}`,
       post_id: id,
@@ -20,7 +20,7 @@ function clonePostForList(id: string, createdAt: string) {
   }
 }
 
-export const sampleCommunityPostListGroup: CommunityPostListGroup = {
+export const sampleGroupPostListGroup: GroupPostListGroup = {
   id: "6f6e9a30-6078-4f80-99e7-42f6d4f6b0c7",
   name: "행정위원회",
   description: "기숙사 운영과 생활 공지를 관리하는 공식 그룹",

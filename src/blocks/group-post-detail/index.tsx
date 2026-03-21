@@ -4,31 +4,31 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
-  CommunityAvatar,
-  CommunityPostGallery,
-  CommunityPostHeader,
-  CommunityPostStats,
-} from "@/blocks/community-post-shared"
+  GroupAvatar,
+  GroupPostGallery,
+  GroupPostHeader,
+  GroupPostStats,
+} from "@/blocks/group-post-shared"
 import { formatRelativeTime } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
 import type {
-  CommunityComment,
-  CommunityPost,
-} from "@/blocks/community-post-types"
+  GroupComment,
+  GroupPost,
+} from "@/blocks/group-post-types"
 
-type CommunityPostDetailProps = {
-  post: CommunityPost
-  commentItems?: CommunityComment[]
+type GroupPostDetailProps = {
+  post: GroupPost
+  commentItems?: GroupComment[]
   className?: string
 }
 
 type CommentMeta = {
-  item: CommunityComment
+  item: GroupComment
   depth: number
   replyCount: number
 }
 
-function countDirectReplies(commentItems: CommunityComment[], parentId: string) {
+function countDirectReplies(commentItems: GroupComment[], parentId: string) {
   return commentItems.filter((item) => item.parent_id === parentId).length
 }
 
@@ -43,7 +43,7 @@ function CommentRow({
   return (
     <div className={cn("flex gap-2.5", depth > 0 && "ml-5")}>
       <div className="pt-1">
-        <CommunityAvatar author={item.author} size="sm" />
+        <GroupAvatar author={item.author} size="sm" />
       </div>
       <div className="min-w-0 flex-1 space-y-1">
         <div className="rounded-3xl bg-zinc-100 px-4 py-3">
@@ -78,20 +78,20 @@ function CommentRow({
   )
 }
 
-export function CommunityPostDetail({
+export function GroupPostDetail({
   post,
   commentItems = [],
   className,
-}: CommunityPostDetailProps) {
+}: GroupPostDetailProps) {
   const images = post.post_images ?? []
   const sortedCommentItems = [...commentItems].sort(
     (a, b) =>
       new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
   )
   const commentMap = new Map(sortedCommentItems.map((item) => [item.id, item]))
-  const childMap = new Map<string | null, CommunityComment[]>()
+  const childMap = new Map<string | null, GroupComment[]>()
 
-  function getTopLevelParentId(comment: CommunityComment) {
+  function getTopLevelParentId(comment: GroupComment) {
     let currentParentId = comment.parent_id ?? null
 
     while (currentParentId) {
@@ -136,7 +136,7 @@ export function CommunityPostDetail({
       <div className="mx-auto w-full max-w-[560px]">
         <Card className="rounded-none border-0 bg-white py-0 shadow-none ring-0">
           <CardContent className="space-y-5 px-4 py-4 sm:px-6">
-            <CommunityPostHeader
+            <GroupPostHeader
               author={post.author}
               createdAt={post.created_at}
               timeVariant="absolute"
@@ -158,9 +158,9 @@ export function CommunityPostDetail({
               </div>
             ) : null}
 
-            <CommunityPostGallery images={images} />
+            <GroupPostGallery images={images} />
 
-            <CommunityPostStats post={post} />
+            <GroupPostStats post={post} />
 
             {commentItems.length > 0 ? (
               <div className="space-y-5">

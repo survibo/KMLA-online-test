@@ -1,6 +1,13 @@
-import { CommunityPostList } from "@/blocks/community-post-list"
-import { sampleCommunityPostListGroup } from "@/blocks/community-post-list/mock"
+import {
+  defaultGroupPostDetailScenario,
+} from "@/blocks/group-post-detail/mock.scenarios"
+import { GroupPostDetail } from "@/blocks/group-post-detail"
 
 export function Example() {
-  return <CommunityPostList group={sampleCommunityPostListGroup} />
+  return (
+    <GroupPostDetail
+      post={defaultGroupPostDetailScenario.post}
+      commentItems={defaultGroupPostDetailScenario.commentItems}
+    />
+  )
 }

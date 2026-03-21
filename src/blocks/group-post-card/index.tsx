@@ -1,22 +1,22 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 import {
-  CommunityPostGallery,
-  CommunityPostHeader,
-  CommunityPostStats,
-} from "@/blocks/community-post-shared"
-import type { CommunityPost } from "@/blocks/community-post-types"
+  GroupPostGallery,
+  GroupPostHeader,
+  GroupPostStats,
+} from "@/blocks/group-post-shared";
+import type { GroupPost } from "@/blocks/group-post-types";
 
-type CommunityPostCardProps = {
-  post: CommunityPost
-  timeVariant?: "absolute" | "relative"
-  className?: string
-}
+type GroupPostCardProps = {
+  post: GroupPost;
+  timeVariant?: "absolute" | "relative";
+  className?: string;
+};
 
-export function CommunityPostCard({
+export function GroupPostCard({
   post,
   timeVariant = "absolute",
   className,
-}: CommunityPostCardProps) {
+}: GroupPostCardProps) {
   return (
     <article
       className={cn(
@@ -25,7 +25,7 @@ export function CommunityPostCard({
       )}
     >
       <div className="mx-auto w-full max-w-4xl space-y-4 px-4 py-4 sm:px-6">
-        <CommunityPostHeader
+        <GroupPostHeader
           author={post.author}
           createdAt={post.created_at}
           timeVariant={timeVariant}
@@ -45,14 +45,14 @@ export function CommunityPostCard({
             </div>
           ) : null}
 
-          <CommunityPostGallery
+          <GroupPostGallery
             images={post.post_images}
             altFallback={`${post.title ?? "Post"} attached image`}
           />
         </div>
 
-        <CommunityPostStats post={post} />
+        <GroupPostStats post={post} />
       </div>
     </article>
-  )
+  );
 }

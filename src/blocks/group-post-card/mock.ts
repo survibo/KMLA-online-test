@@ -1,8 +1,8 @@
-import type { CommunityPostCardData } from "./types"
+import type { GroupPostCardData } from "./types"
 
 const POST_ID = "dfb5a0a2-5ef8-4be2-87d5-3ebc4a2370a1"
 
-export const baseCommunityPostCardPost: CommunityPostCardData = {
+export const baseGroupPostCardPost: GroupPostCardData = {
   id: POST_ID,
   group_id: "c108d2a4-1f4d-4db5-bd75-5b413d4e6a29",
   author_id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
@@ -56,20 +56,20 @@ export const baseCommunityPostCardPost: CommunityPostCardData = {
   ],
 }
 
-export function createCommunityPostCardPost(
-  overrides: Partial<CommunityPostCardData> = {}
-): CommunityPostCardData {
+export function createGroupPostCardPost(
+  overrides: Partial<GroupPostCardData> = {}
+): GroupPostCardData {
   return {
-    ...baseCommunityPostCardPost,
+    ...baseGroupPostCardPost,
     ...overrides,
-    author: { ...(overrides.author ?? baseCommunityPostCardPost.author) },
-    post_images: (overrides.post_images ?? baseCommunityPostCardPost.post_images)?.map(
+    author: { ...(overrides.author ?? baseGroupPostCardPost.author) },
+    post_images: (overrides.post_images ?? baseGroupPostCardPost.post_images)?.map(
       (image) => ({ ...image })
     ),
     post_reactions: (
-      overrides.post_reactions ?? baseCommunityPostCardPost.post_reactions
+      overrides.post_reactions ?? baseGroupPostCardPost.post_reactions
     )?.map((reaction) => ({ ...reaction })),
   }
 }
 
-export const sampleCommunityPostCardPost = createCommunityPostCardPost()
+export const sampleGroupPostCardPost = createGroupPostCardPost()

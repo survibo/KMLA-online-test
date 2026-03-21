@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import type {
-  CommunityPost,
-  CommunityPostImage,
-  CommunityUser,
-} from "./community-post-types"
+  GroupPost,
+  GroupPostImage,
+  GroupUser,
+} from "./group-post-types"
 
 function getInitials(name: string) {
   return name
@@ -26,11 +26,11 @@ function getInitials(name: string) {
     .join("")
 }
 
-export function CommunityAvatar({
+export function GroupAvatar({
   author,
   size = "md",
 }: {
-  author: CommunityUser
+  author: GroupUser
   size?: "sm" | "md"
 }) {
   const avatarSize = size === "sm" ? "default" : "lg"
@@ -46,13 +46,13 @@ export function CommunityAvatar({
   )
 }
 
-export function CommunityPostHeader({
+export function GroupPostHeader({
   author,
   createdAt,
   timeVariant = "absolute",
   showMenu = false,
 }: {
-  author: CommunityUser
+  author: GroupUser
   createdAt: string
   timeVariant?: "absolute" | "relative"
   showMenu?: boolean
@@ -65,7 +65,7 @@ export function CommunityPostHeader({
   return (
     <div className="flex items-start justify-between gap-4">
       <div className="flex items-center gap-2.5">
-        <CommunityAvatar author={author} size="md" />
+        <GroupAvatar author={author} size="md" />
         <div className="space-y-0.5">
           <p className="text-[1.05rem] leading-5 font-semibold tracking-tight text-zinc-900">
             {author.name}
@@ -100,11 +100,11 @@ export function CommunityPostHeader({
   )
 }
 
-export function CommunityPostStats({
+export function GroupPostStats({
   post,
   className,
 }: {
-  post: CommunityPost
+  post: GroupPost
   className?: string
 }) {
   const likes = post.reaction_count ?? post.post_reactions?.length ?? 0
@@ -134,12 +134,12 @@ export function CommunityPostStats({
   )
 }
 
-export function CommunityPostGallery({
+export function GroupPostGallery({
   images = [],
   className,
   altFallback = "Post attachment preview",
 }: {
-  images?: CommunityPostImage[]
+  images?: GroupPostImage[]
   className?: string
   altFallback?: string
 }) {

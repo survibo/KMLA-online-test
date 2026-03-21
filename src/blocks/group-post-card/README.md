@@ -1,8 +1,8 @@
-# Community Post Card
+# Group Post Card
 
 ## Purpose
 
-`CommunityPostCard`는 커뮤니티 게시글 목록에서 사용하는 요약형 block이다.
+`GroupPostCard`는 그룹 게시글 목록에서 사용하는 요약형 block이다.
 
 이 block은 게시글의 핵심 정보만 보여준다.
 
@@ -15,7 +15,7 @@
 
 ## Data Contract
 
-이 block은 `CommunityPost` 기반 데이터를 받는다.
+이 block은 `GroupPost` 기반 데이터를 받는다.
 
 현재 기준:
 
@@ -57,12 +57,12 @@ mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 ## Example
 
 ```tsx
-import { CommunityPostCard } from "@/blocks/community-post-card"
+import { GroupPostCard } from "@/blocks/group-post-card"
 import {
-  sampleCommunityPostCardScenario,
-} from "@/blocks/community-post-card/mock.scenarios"
+  sampleGroupPostCardScenario,
+} from "@/blocks/group-post-card/mock.scenarios"
 
 export function Example() {
-  return <CommunityPostCard post={sampleCommunityPostCardScenario.post} />
+  return <GroupPostCard post={sampleGroupPostCardScenario.post} />
 }
 ```

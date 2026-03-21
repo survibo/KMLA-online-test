@@ -1,8 +1,8 @@
-# Community Post Detail
+# Group Post Detail
 
 ## Purpose
 
-`CommunityPostDetail`은 게시글 상세 화면과 댓글 목록을 함께 렌더링하는 block이다.
+`GroupPostDetail`은 그룹 게시글 상세 화면과 댓글 목록을 함께 렌더링하는 block이다.
 
 이 block은 단순 표시 컴포넌트가 아니라, 댓글 트리와 화면 전용 파생값을 함께 다룬다.
 
@@ -10,8 +10,8 @@
 
 입력 데이터는 아래 구조를 전제로 한다.
 
-- 게시글: `CommunityPost`
-- 댓글 목록: `CommunityComment[]`
+- 게시글: `GroupPost`
+- 댓글 목록: `GroupComment[]`
 
 현재 스키마 기준에서 우선 사용하는 값:
 
@@ -76,15 +76,15 @@ mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 
 ```tsx
 import {
-  defaultCommunityPostDetailScenario,
-} from "@/blocks/community-post-detail/mock.scenarios"
-import { CommunityPostDetail } from "@/blocks/community-post-detail"
+  defaultGroupPostDetailScenario,
+} from "@/blocks/group-post-detail/mock.scenarios"
+import { GroupPostDetail } from "@/blocks/group-post-detail"
 
 export function Example() {
   return (
-    <CommunityPostDetail
-      post={defaultCommunityPostDetailScenario.post}
-      commentItems={defaultCommunityPostDetailScenario.commentItems}
+    <GroupPostDetail
+      post={defaultGroupPostDetailScenario.post}
+      commentItems={defaultGroupPostDetailScenario.commentItems}
     />
   )
 }

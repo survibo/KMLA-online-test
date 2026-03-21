@@ -1,6 +1,6 @@
 import { ArrowLeft, ChevronDown, Plus, Search } from "lucide-react"
 
-import { CommunityPostCard } from "@/blocks/community-post-card"
+import { GroupPostCard } from "@/blocks/group-post-card"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import type { CommunityPostListGroup } from "./types"
+import type { GroupPostListGroup } from "./types"
 
-type CommunityPostListProps = {
-  group: CommunityPostListGroup
+type GroupPostListProps = {
+  group: GroupPostListGroup
   className?: string
 }
 
-export function CommunityPostList({ group, className }: CommunityPostListProps) {
+export function GroupPostList({ group, className }: GroupPostListProps) {
   return (
     <section className={cn("min-h-screen bg-white text-zinc-950", className)}>
       <header className="sticky top-0 z-10 border-b border-zinc-200/80 bg-white/95 backdrop-blur-sm">
@@ -75,7 +75,7 @@ export function CommunityPostList({ group, className }: CommunityPostListProps) 
 
       <div>
         {group.posts.map((post) => (
-          <CommunityPostCard
+          <GroupPostCard
             key={post.id}
             post={post}
             timeVariant="relative"

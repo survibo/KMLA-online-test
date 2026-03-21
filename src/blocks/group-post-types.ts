@@ -1,10 +1,10 @@
-export type CommunityUser = {
+export type GroupUser = {
   id: string
   name: string
   img: string | null
 }
 
-export type CommunityPostImage = {
+export type GroupPostImage = {
   id: string
   post_id: string
   url: string
@@ -15,7 +15,7 @@ export type CommunityPostImage = {
   height?: number | null
 }
 
-export type CommunityReactionType =
+export type GroupReactionType =
   | "like"
   | "love"
   | "laugh"
@@ -23,16 +23,16 @@ export type CommunityReactionType =
   | "sad"
   | "angry"
 
-export type CommunityReaction = {
+export type GroupReaction = {
   id: string
   post_id?: string
   comment_id?: string
   user_id: string
-  type: CommunityReactionType
+  type: GroupReactionType
   created_at: string
 }
 
-export type CommunityComment = {
+export type GroupComment = {
   id: string
   post_id: string
   author_id: string
@@ -42,11 +42,11 @@ export type CommunityComment = {
   created_at: string
   updated_at?: string | null
   deleted_at?: string | null
-  author: CommunityUser
-  comment_reactions?: CommunityReaction[]
+  author: GroupUser
+  comment_reactions?: GroupReaction[]
 }
 
-export type CommunityPost = {
+export type GroupPost = {
   id: string
   group_id: string
   author_id: string
@@ -57,7 +57,7 @@ export type CommunityPost = {
   created_at: string
   updated_at?: string | null
   deleted_at?: string | null
-  author: CommunityUser
-  post_images?: CommunityPostImage[]
-  post_reactions?: CommunityReaction[]
+  author: GroupUser
+  post_images?: GroupPostImage[]
+  post_reactions?: GroupReaction[]
 }

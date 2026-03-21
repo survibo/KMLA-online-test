@@ -1,12 +1,12 @@
 import type {
-  CommunityPostDetailCommentData,
-  CommunityPostDetailData,
+  GroupPostDetailCommentData,
+  GroupPostDetailData,
 } from "./types"
 
 const POST_ID = "dfb5a0a2-5ef8-4be2-87d5-3ebc4a2370a1"
 const ROOT_COMMENT_ID = "b741b315-d9c5-4568-bfb8-97a58c48bc79"
 
-export const baseCommunityPostDetailPost: CommunityPostDetailData = {
+export const baseGroupPostDetailPost: GroupPostDetailData = {
   id: POST_ID,
   group_id: "c108d2a4-1f4d-4db5-bd75-5b413d4e6a29",
   author_id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
@@ -111,7 +111,7 @@ export const baseCommunityPostDetailPost: CommunityPostDetailData = {
   ],
 }
 
-export const baseCommunityPostDetailComments: CommunityPostDetailCommentData[] = [
+export const baseGroupPostDetailComments: GroupPostDetailCommentData[] = [
   {
     id: ROOT_COMMENT_ID,
     post_id: POST_ID,
@@ -221,8 +221,8 @@ export const baseCommunityPostDetailComments: CommunityPostDetailCommentData[] =
 ]
 
 function cloneComment(
-  comment: CommunityPostDetailCommentData
-): CommunityPostDetailCommentData {
+  comment: GroupPostDetailCommentData
+): GroupPostDetailCommentData {
   return {
     ...comment,
     author: { ...comment.author },
@@ -232,28 +232,28 @@ function cloneComment(
   }
 }
 
-export function createCommunityPostDetailPost(
-  overrides: Partial<CommunityPostDetailData> = {}
-): CommunityPostDetailData {
+export function createGroupPostDetailPost(
+  overrides: Partial<GroupPostDetailData> = {}
+): GroupPostDetailData {
   return {
-    ...baseCommunityPostDetailPost,
+    ...baseGroupPostDetailPost,
     ...overrides,
-    author: { ...(overrides.author ?? baseCommunityPostDetailPost.author) },
-    post_images: (overrides.post_images ?? baseCommunityPostDetailPost.post_images)?.map(
+    author: { ...(overrides.author ?? baseGroupPostDetailPost.author) },
+    post_images: (overrides.post_images ?? baseGroupPostDetailPost.post_images)?.map(
       (image) => ({ ...image })
     ),
     post_reactions: (
-      overrides.post_reactions ?? baseCommunityPostDetailPost.post_reactions
+      overrides.post_reactions ?? baseGroupPostDetailPost.post_reactions
     )?.map((reaction) => ({ ...reaction })),
   }
 }
 
-export function createCommunityPostDetailComments(
-  comments: CommunityPostDetailCommentData[] = baseCommunityPostDetailComments
+export function createGroupPostDetailComments(
+  comments: GroupPostDetailCommentData[] = baseGroupPostDetailComments
 ) {
   return comments.map(cloneComment)
 }
 
-export const sampleCommunityPostDetailPost = createCommunityPostDetailPost()
-export const sampleCommunityPostDetailComments =
-  createCommunityPostDetailComments()
+export const sampleGroupPostDetailPost = createGroupPostDetailPost()
+export const sampleGroupPostDetailComments =
+  createGroupPostDetailComments()
