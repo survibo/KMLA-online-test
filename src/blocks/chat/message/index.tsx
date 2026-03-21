@@ -1,10 +1,10 @@
 import { useLayoutEffect, useRef, useState } from "react"
 import { ChevronDown } from "lucide-react"
 
-import { cn } from "@/lib/utils"
-
 import { ChatAvatar } from "@/blocks/chat/shared"
 import { Button } from "@/components/ui/button"
+import { formatIsoDateTime } from "@/lib/datetime"
+import { cn } from "@/lib/utils"
 
 import type { ChatMessageThreadData } from "./types"
 
@@ -14,32 +14,10 @@ type ChatMessageProps = {
 }
 
 function formatChatDividerLabel(isoString: string) {
-  const date = new Date(isoString)
-
-  if (Number.isNaN(date.getTime())) return isoString
-
-  return new Intl.DateTimeFormat("ko-KR", {
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  }).format(date)
+  return formatIsoDateTime(isoString)
 }
 
-function shouldShowDivider(previousCreatedAt: string | undefined, createdAt: string) {
-  if (!previousCreatedAt) return true
-
-  const previous = new Date(previousCreatedAt).getTime()
-  const current = new Date(createdAt).getTime()
-
-  return current - previous >= 1000 * 60 * 60 * 5
-}
-
-function isSeparatedByLongGap(
-  previousCreatedAt: string | undefined,
-  createdAt: string
-) {
+function hasLongGap(previousCreatedAt: string | undefined, createdAt: string) {
   if (!previousCreatedAt) return true
 
   const previous = new Date(previousCreatedAt).getTime()
@@ -73,97 +51,84 @@ export function ChatMessage({ data, className }: ChatMessageProps) {
       <div
         ref={scrollContainerRef}
         onScroll={(event) => updateScrollState(event.currentTarget)}
-        className="h-full w-full overflow-y-auto px-2 py-1 text-zinc-950"
+        className="h-full w-full overflow-y-auto px-3 py-4 text-zinc-950 sm:px-4"
       >
-        <div className="w-full pb-7">
+        <div className="pb-10">
           {data.messages.map((message, index) => {
-            const isOwn = message.sender_id === data.current_user_id
             const previousMessage = data.messages[index - 1]
             const nextMessage = data.messages[index + 1]
-            const hasLongGapFromPrevious = isSeparatedByLongGap(
+            const isOwn = message.sender_id === data.current_user_id
+            const startsNewBlock =
+              previousMessage?.sender_id !== message.sender_id ||
+              hasLongGap(previousMessage?.created_at, message.created_at)
+            const endsBlock =
+              nextMessage?.sender_id !== message.sender_id ||
+              hasLongGap(message.created_at, nextMessage?.created_at ?? "")
+            const showDivider = hasLongGap(
               previousMessage?.created_at,
               message.created_at
             )
-            const hasLongGapToNext = nextMessage
-              ? isSeparatedByLongGap(message.created_at, nextMessage.created_at)
-              : true
-            const isContinuation =
-              previousMessage?.sender_id === message.sender_id && !hasLongGapFromPrevious
-            const continuesToNext =
-              nextMessage?.sender_id === message.sender_id && !hasLongGapToNext
-            const showDivider = shouldShowDivider(
-              previousMessage?.created_at,
-              message.created_at
-            )
-            const showName = !isOwn && (!isContinuation || showDivider)
-            const showAvatar =
-              !isOwn &&
-              (nextMessage?.sender_id !== message.sender_id || hasLongGapToNext)
 
             return (
               <div
                 key={message.id}
                 className={cn(
-                  "space-y-1.5",
-                  isContinuation ? "mt-0.5" : index === 0 ? "" : "mt-6"
+                  index === 0 ? "" : startsNewBlock ? "mt-3" : "mt-0.5"
                 )}
               >
                 {showDivider ? (
-                  <div className="flex items-center justify-center py-1.5">
-                    <p className="text-[0.82rem] font-medium text-zinc-400">
-                      {formatChatDividerLabel(message.created_at)}
-                    </p>
+                  <div className="mb-6 text-center text-xs font-medium text-zinc-400">
+                    {formatChatDividerLabel(message.created_at)}
                   </div>
                 ) : null}
 
-                {showName ? (
-                  <p className="pl-14 text-[0.95rem] font-medium text-zinc-500">
+                {!isOwn && startsNewBlock ? (
+                  <div className="mb-1 pl-14 text-[13px] font-medium text-zinc-500">
                     {message.sender.name}
-                  </p>
+                  </div>
                 ) : null}
 
                 <div
                   className={cn(
-                    "flex items-end gap-2.5",
+                    "flex items-end",
                     isOwn ? "justify-end" : "justify-start"
                   )}
                 >
-                  {!isOwn ? (
-                    showAvatar ? (
-                      <ChatAvatar user={message.sender} className="size-10 shrink-0" />
-                    ) : (
-                      <div className="w-10 shrink-0" />
-                    )
-                  ) : null}
-
                   <div
                     className={cn(
-                      "flex max-w-[76%] flex-col",
-                      isOwn ? "items-end" : "items-start"
+                      isOwn ? "max-w-[78%]" : "relative max-w-[78%] pl-12"
                     )}
                   >
+                    {!isOwn && endsBlock ? (
+                      <ChatAvatar
+                        user={message.sender}
+                        className="absolute bottom-0 left-0 size-9"
+                      />
+                    ) : null}
+
                     <div
                       className={cn(
-                        "max-w-full rounded-[1.45rem] px-3.5 py-2 text-left text-[0.98rem] leading-[1.45]",
-                        isOwn && isContinuation && "rounded-tr-md",
-                        isOwn && continuesToNext && "rounded-br-md",
-                        !isOwn && isContinuation && "rounded-tl-md",
-                        !isOwn && continuesToNext && "rounded-bl-md",
+                        "inline-flex max-w-full px-4 py-2.5 text-[15px] leading-[1.45] shadow-none",
+                        startsNewBlock
+                          ? "rounded-t-[22px]"
+                          : isOwn
+                            ? "rounded-tr-[8px]"
+                            : "rounded-tl-[8px]",
+                        endsBlock
+                          ? "rounded-b-[22px]"
+                          : isOwn
+                            ? "rounded-br-[8px]"
+                            : "rounded-bl-[8px]",
+                        isOwn ? "rounded-l-[22px]" : "rounded-r-[22px]",
                         isOwn
                           ? "bg-blue-600 text-white"
-                          : "bg-zinc-100 text-zinc-800"
+                          : "bg-zinc-100 text-zinc-900"
                       )}
                     >
-                      <p className="whitespace-pre-wrap break-keep [overflow-wrap:anywhere]">
+                      <span className="block text-left whitespace-normal break-keep [overflow-wrap:anywhere]">
                         {message.content}
-                      </p>
+                      </span>
                     </div>
-
-                    {isOwn && nextMessage?.sender_id !== message.sender_id ? (
-                      <p className="pr-1 text-[0.8rem] font-medium text-indigo-500">
-                        {message.is_edited ? "수정됨" : ""}
-                      </p>
-                    ) : null}
                   </div>
                 </div>
               </div>
