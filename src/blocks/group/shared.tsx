@@ -88,14 +88,14 @@ export function GroupPostContent({
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       {post.title || post.content ? (
-        <div>
+        <div className="space-y-5">
           {post.title ? (
             <h2 className="text-[1.35rem] leading-[1.12] font-bold tracking-[-0.03em] text-zinc-950">
               {post.title}
             </h2>
           ) : null}
           {post.content ? (
-            <p className="mt-2 whitespace-pre-line break-keep text-zinc-600">
+            <p className="whitespace-pre-line break-keep text-zinc-600">
               {post.content}
             </p>
           ) : null}

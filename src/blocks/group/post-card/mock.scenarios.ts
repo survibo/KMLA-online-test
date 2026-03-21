@@ -176,6 +176,19 @@ export const groupPostCardBusyDiscussionScenario: GroupPostCardScenario = {
   ),
 }
 
+export const groupPostCardWithoutTitleScenario: GroupPostCardScenario = {
+  id: "without-title",
+  label: "제목 없음",
+  description: "제목 없이 본문과 이미지, 액션만 보이는 카드 상태",
+  post: createGroupPostCardPost(baseGroupPostPrimaryPostId, {
+    posts: baseGroupPostMockData.posts.map((post) =>
+      post.id === baseGroupPostPrimaryPostId
+        ? { ...post, title: null }
+        : post
+    ),
+  }),
+}
+
 export const groupPostCardWithoutCommentsScenario: GroupPostCardScenario = {
   id: "without-comments",
   label: "댓글 없음",
@@ -212,11 +225,12 @@ export const groupPostCardWithoutImageWithoutCommentsScenario: GroupPostCardScen
 export const groupPostCardScenarios: GroupPostCardScenario[] = [
   groupPostCardWithImageScenario,
   groupPostCardBusyDiscussionScenario,
+  groupPostCardWithoutTitleScenario,
   groupPostCardWithoutCommentsScenario,
   groupPostCardWithoutImageWithoutCommentsScenario,
 ]
 
-export const activeGroupPostCardScenarioIndex = 0 // 0 ~ 3, total 4 scenarios
+export const activeGroupPostCardScenarioIndex = 0 // 0 ~ 4, total 5 scenarios
 
 export const activeGroupPostCardScenario =
   groupPostCardScenarios[activeGroupPostCardScenarioIndex]

@@ -205,6 +205,20 @@ export const groupPostDetailNoImagesScenario: GroupPostDetailScenario = {
   commentItems: createGroupPostDetailComments(),
 }
 
+export const groupPostDetailWithoutTitleScenario: GroupPostDetailScenario = {
+  id: "without-title",
+  label: "제목 없음",
+  description: "제목 없이 본문과 이미지, 댓글 흐름만 확인하는 상세 상태",
+  post: createGroupPostDetailPost(baseGroupPostPrimaryPostId, {
+    posts: baseGroupPostMockData.posts.map((post) =>
+      post.id === baseGroupPostPrimaryPostId
+        ? { ...post, title: null }
+        : post
+    ),
+  }),
+  commentItems: createGroupPostDetailComments(),
+}
+
 export const groupPostDetailHeavyDiscussionScenario: GroupPostDetailScenario = {
   id: "heavy-discussion",
   label: "댓글 많은 글",
@@ -236,10 +250,11 @@ export const groupPostDetailMissingCacheScenario: GroupPostDetailScenario = {
 export const groupPostDetailScenarios: GroupPostDetailScenario[] = [
   groupPostDetailDefaultScenario,
   groupPostDetailNoImagesScenario,
+  groupPostDetailWithoutTitleScenario,
   groupPostDetailHeavyDiscussionScenario,
 ]
 
-export const activeGroupPostDetailScenarioIndex = 0 // 0 ~ 2, total 3 scenarios
+export const activeGroupPostDetailScenarioIndex = 0 // 0 ~ 3, total 4 scenarios
 
 export const activeGroupPostDetailScenario =
   groupPostDetailScenarios[activeGroupPostDetailScenarioIndex]
