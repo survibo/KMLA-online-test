@@ -132,6 +132,12 @@ export function ScenarioPreview() {
     }
   }, [])
 
+  useEffect(() => {
+    if (!selection) return
+
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" })
+  }, [selection])
+
   if (selection) {
     const scenarioGroup = scenarioGroups.find((item) => item.id === selection.groupId)
 

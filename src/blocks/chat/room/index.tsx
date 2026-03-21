@@ -1,4 +1,4 @@
-import { ArrowLeft, Plus, SendHorizonal } from "lucide-react"
+import { ArrowLeft, CircleAlert, Plus, SendHorizonal } from "lucide-react"
 
 import { ChatMessage } from "@/blocks/chat/message"
 import { ChatAvatar } from "@/blocks/chat/shared"
@@ -32,11 +32,20 @@ export function ChatRoom({ data, className }: ChatRoomProps) {
           <ArrowLeft className="size-5" strokeWidth={2.3} />
         </Button>
         <ChatAvatar user={data.participant} className="size-11" />
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h1 className="truncate text-[1.08rem] font-semibold tracking-tight">
             {data.room_name}
           </h1>
         </div>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="rounded-full text-zinc-500"
+          aria-label="Room info"
+        >
+          <CircleAlert className="size-5" strokeWidth={2.2} />
+        </Button>
       </header>
 
       <div className="min-h-0 flex-1 overflow-hidden px-2 py-0 sm:px-4">
