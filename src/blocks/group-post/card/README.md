@@ -24,6 +24,7 @@
 - `post.comment_count`는 `post.post_comments`의 최상위 댓글 수와 맞춰 유지한다.
 - `post.post_comments`가 있으면 가장 최근 댓글 1개를 카드 안에서 미리 보여줄 수 있다.
 - 대표 이미지는 `post_images.sort_order asc` 기준 첫 번째 항목을 사용한다.
+- block mock은 `src/blocks/group-post/mock.ts`의 raw post/comment/reaction을 source of truth로 사용한다.
 
 권장:
 
@@ -53,15 +54,13 @@
 - `mock.scenarios.ts`: 이미지 유무 같은 실험용 시나리오 mock
 - `types.ts`: 목록 카드용 타입 alias
 - `../types.ts`: group post 공용 타입
-- `../shared.tsx`: group post 공용 UI 조각
-- `../styles.css`: group post 계열 공용 색상 토큰과 댓글 UI 스타일
 
 ## Mock Workflow
 
 mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 
-1. `mock.ts`의 base data는 기준 샘플로 유지한다.
-2. 이미지 유무, 댓글 미리보기 유무 같은 변형은 `mock.scenarios.ts`에 scenario로 추가한다.
+1. `mock.ts`는 도메인 raw mock에서 카드용 projection만 계산한다.
+2. 이미지 유무, 댓글 미리보기 유무 같은 변형은 `mock.scenarios.ts`에서 raw override 후 projection을 다시 계산한다.
 3. 목록 레이아웃 검증은 scenario 이름만 보고도 상태를 알 수 있어야 한다.
 
 ## Example

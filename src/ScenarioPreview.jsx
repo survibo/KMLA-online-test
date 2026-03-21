@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button"
 
 const scenarioGroups = [
   {
+    domain: "chat",
     id: "chat-room-card",
     label: "Chat Room Card",
     scenarios: chatRoomCardScenarios,
@@ -36,30 +37,35 @@ const scenarioGroups = [
     ),
   },
   {
+    domain: "chat",
     id: "chat-room-list",
     label: "Chat Room List",
     scenarios: chatRoomListScenarios,
     render: (scenario) => <ChatRoomList data={scenario.data} />,
   },
   {
+    domain: "chat",
     id: "chat-message",
     label: "Chat Message",
     scenarios: chatMessageScenarios,
     render: (scenario) => <ChatMessage data={scenario.data} />,
   },
   {
+    domain: "chat",
     id: "chat-room",
     label: "Chat Room",
     scenarios: chatRoomScenarios,
     render: (scenario) => <ChatRoom data={scenario.data} />,
   },
   {
+    domain: "group-post",
     id: "card",
     label: "Group Post Card",
     scenarios: groupPostCardScenarios,
     render: (scenario) => <GroupPostCard post={scenario.post} />,
   },
   {
+    domain: "group-post",
     id: "detail",
     label: "Group Post Detail",
     scenarios: groupPostDetailScenarios,
@@ -71,10 +77,22 @@ const scenarioGroups = [
     ),
   },
   {
+    domain: "group-post",
     id: "list",
     label: "Group Post List",
     scenarios: groupPostListScenarios,
     render: (scenario) => <GroupPostList group={scenario.group} />,
+  },
+]
+
+const scenarioDomains = [
+  {
+    id: "chat",
+    label: "Chat",
+  },
+  {
+    id: "group-post",
+    label: "Group Post",
   },
 ]
 
@@ -162,38 +180,65 @@ export function ScenarioPreview() {
         </div>
 
         <div className="space-y-5">
-          {scenarioGroups.map((scenarioGroup) => (
-            <section
-              key={scenarioGroup.id}
-              className="rounded-2xl border border-zinc-200 bg-white p-5"
-            >
-              <div className="space-y-3">
-                <div>
-                  <h2 className="text-lg font-semibold">{scenarioGroup.label}</h2>
-                  <p className="text-sm text-zinc-500">
-                    총 {scenarioGroup.scenarios.length}개 시나리오
-                  </p>
-                </div>
+          {scenarioDomains.map((domain) => {
+            const domainGroups = scenarioGroups.filter(
+              (scenarioGroup) => scenarioGroup.domain === domain.id
+            )
 
-                <div className="flex flex-wrap gap-2">
-                  {scenarioGroup.scenarios.map((scenario, index) => (
-                    <Button
-                      key={scenario.id}
-                      type="button"
-                      variant="outline"
-                      className="h-auto items-start rounded-xl px-4 py-3 text-left"
-                      onClick={() => writeHashSelection(scenarioGroup.id, index)}
-                    >
-                      <span className="font-semibold">{index}</span>
-                      <span className="ml-2 text-sm text-zinc-600">
-                        {scenario.label}
-                      </span>
-                    </Button>
-                  ))}
+            return (
+              <section
+                key={domain.id}
+                className="rounded-3xl border border-zinc-200 bg-white p-5 sm:p-6"
+              >
+                <div className="space-y-5">
+                  <div>
+                    <h2 className="text-xl font-semibold tracking-tight">
+                      {domain.label}
+                    </h2>
+                  </div>
+
+                  <div className="space-y-4">
+                    {domainGroups.map((scenarioGroup) => (
+                      <section
+                        key={scenarioGroup.id}
+                        className="rounded-2xl border border-zinc-200 bg-zinc-50 p-4"
+                      >
+                        <div className="space-y-3">
+                          <div>
+                            <h3 className="text-lg font-semibold">
+                              {scenarioGroup.label}
+                            </h3>
+                            <p className="text-sm text-zinc-500">
+                              총 {scenarioGroup.scenarios.length}개 시나리오
+                            </p>
+                          </div>
+
+                          <div className="flex flex-wrap gap-2">
+                            {scenarioGroup.scenarios.map((scenario, index) => (
+                              <Button
+                                key={scenario.id}
+                                type="button"
+                                variant="outline"
+                                className="h-auto items-start rounded-xl bg-white px-4 py-3 text-left"
+                                onClick={() =>
+                                  writeHashSelection(scenarioGroup.id, index)
+                                }
+                              >
+                                <span className="font-semibold">{index}</span>
+                                <span className="ml-2 text-sm text-zinc-600">
+                                  {scenario.label}
+                                </span>
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                      </section>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </section>
-          ))}
+              </section>
+            )
+          })}
         </div>
       </div>
     </main>

@@ -36,7 +36,7 @@ export function ChatAvatar({
   className?: string
 }) {
   return (
-    <Avatar size="lg" className={cn("size-14", className)}>
+    <Avatar className={cn(className)}>
       <AvatarImage src={user.img} alt={user.name} />
       <AvatarFallback className="bg-zinc-200 font-semibold text-zinc-600">
         {getInitials(user.name)}
@@ -64,11 +64,11 @@ export function ChatRoomAvatar({
   return (
     <div
       className={cn(
-        "chat-room-avatar-group flex size-14 items-center justify-center rounded-full text-zinc-700",
+        "chat-room-avatar-group flex items-center justify-center rounded-full text-zinc-700",
         className
       )}
     >
-      <Users className="size-6" strokeWidth={2.2} />
+      <Users className="size-5" strokeWidth={2.2} />
     </div>
   )
 }

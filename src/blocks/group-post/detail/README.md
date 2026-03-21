@@ -19,8 +19,6 @@
 - 게시글 댓글 수: `comment_count` (최상위 댓글 수)
 - 댓글 답글 수: `reply_count` (직계 답글 수)
 - 이미지 정렬 기준: `post_images.sort_order`
-- 댓글 목록 렌더링은 `src/blocks/group-post/shared.tsx`의 공용 thread 조각을 재사용한다.
-- 댓글 계열 색상과 반복 스타일은 `src/blocks/group-post/styles.css`에서 공용으로 관리한다.
 
 캐시 컬럼이 없을 때만 화면에서 fallback 계산을 허용한다.
 
@@ -46,7 +44,7 @@
 - 댓글 트리 평탄화
 - depth 기반 들여쓰기 제어
 - `reply_count` fallback 계산
-- 공용 댓글 thread 조각에 넘길 화면용 댓글 순서 계산
+- 상세 화면용 댓글 순서 계산
 
 포함하지 않음:
 
@@ -68,7 +66,7 @@
 
 mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 
-1. `mock.ts`의 base data는 실제 API 응답에 가까운 기준 샘플로 유지한다.
+1. `mock.ts`는 `src/blocks/group-post/mock.ts`의 raw mock을 상세 props로 projection하는 역할에 집중한다.
 2. 실험 케이스는 `mock.scenarios.ts`에 별도 scenario로 추가한다.
 3. 새 시나리오는 무엇을 검증하려는지 `label`과 `description`으로 드러낸다.
 4. 렌더링 fallback을 시험할 때만 count 캐시를 의도적으로 비운다.

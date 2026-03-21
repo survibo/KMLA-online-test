@@ -346,6 +346,7 @@ src/blocks/<domain>/
 - 공용 스타일 토큰은 도메인 폴더 내부 CSS 파일에 모은다.
 - 반복되는 색상, surface, action button, drawer 같은 표현은 가능한 한 그 CSS에서 이름 있는 class로 관리한다.
 - block 본체에는 의미 있는 class 이름과 레이아웃 class만 남기고, 도메인 전용 표현은 도메인 CSS로 모은다.
+- 간격은 `space-x-*`, `space-y-*`보다 `margin`, `padding`, `gap`을 직접 써서 명시적으로 표현한다.
 
 CSS로 분리하는 기준:
 
@@ -354,6 +355,8 @@ CSS로 분리하는 기준:
 - drawer 방향 selector, data attribute selector, 복합 hover/focus 상태처럼 JSX에서 읽기 어려운 규칙은 CSS로 둔다.
 - 버튼, 댓글 박스, 입력창, surface처럼 의미 있는 UI 표현은 CSS class 이름으로 관리한다.
 - 반대로 파일 하나에서만 쓰는 단순 레이아웃, flex/grid 배치, 국소 spacing은 JSX/Tailwind에 남겨도 된다.
+- 공용 CSS는 기본 선택지가 아니며, 꼭 필요할 때만 사용한다.
+- 사용자가 공용 CSS 사용을 명시적으로 요청한 경우에는 그 방향을 따른다.
 
 시간 표시 규칙:
 

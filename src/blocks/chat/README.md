@@ -24,4 +24,5 @@
 - `message` block은 대화 흐름 확인이 중요하므로 mock 길이에 한해 block-local 예외를 둘 수 있다.
 - block 전용 계산값은 각 block의 `types.ts`에서 분리한다.
 - 공용 스타일이나 타입이 바뀌면 이를 사용하는 `room-card`, `room-list`, `room`, `message`를 함께 점검한다.
+- 공용 아바타는 `shared.tsx`에서 표시 방식만 통일하고, 실제 크기는 각 사용처의 `className`에서 결정한다.
 - 시간 문자열은 raw ISO를 직접 뿌리지 않고 공용 formatter를 사용한다.

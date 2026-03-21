@@ -32,7 +32,11 @@ export function ChatRoomCard({
         className
       )}
     >
-      <ChatRoomAvatar room={room} currentUserId={currentUserId} />
+      <ChatRoomAvatar
+        room={room}
+        currentUserId={currentUserId}
+        className="size-14"
+      />
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-3">

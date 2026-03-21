@@ -4,6 +4,15 @@ export type GroupUser = {
   img: string | null
 }
 
+export type GroupRecord = {
+  id: string
+  name: string
+  description: string | null
+  is_official: boolean
+  is_personal: boolean
+  created_at: string
+}
+
 export type GroupPostImage = {
   id: string
   post_id: string
@@ -30,6 +39,31 @@ export type GroupReaction = {
   user_id: string
   type: GroupReactionType
   created_at: string
+}
+
+export type GroupPostRecord = {
+  id: string
+  group_id: string
+  author_id: string
+  title?: string | null
+  content?: string | null
+  comment_count?: number
+  reaction_count?: number
+  created_at: string
+  updated_at?: string | null
+  deleted_at?: string | null
+}
+
+export type GroupCommentRecord = {
+  id: string
+  post_id: string
+  author_id: string
+  parent_id?: string | null
+  content: string
+  reply_count?: number
+  created_at: string
+  updated_at?: string | null
+  deleted_at?: string | null
 }
 
 export type GroupComment = {

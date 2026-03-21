@@ -1,7 +1,14 @@
+import {
+  baseGroupPostLatestPostId,
+  baseGroupPostListGroupId,
+  baseGroupPostMockData,
+  baseGroupPostSecondPostId,
+} from "@/blocks/group-post/mock"
+
 import type { GroupPostListGroup } from "./types"
 import {
-  baseGroupPostListPosts,
   createGroupPostListGroup,
+  createGroupPostListGroupFromMockData,
 } from "./mock"
 
 export type GroupPostListScenario = {
@@ -14,7 +21,7 @@ export type GroupPostListScenario = {
 export const groupPostListDefaultScenario: GroupPostListScenario = {
   id: "default",
   label: "기본",
-  description: "같은 카드 데이터를 여러 개 쌓아 보는 기본 목록 상태",
+  description: "도메인 raw mock에서 최신 글 순으로 projection한 기본 목록 상태",
   group: createGroupPostListGroup(),
 }
 
@@ -22,8 +29,13 @@ export const groupPostListSparseScenario: GroupPostListScenario = {
   id: "sparse",
   label: "게시글 적음",
   description: "게시글 수가 적은 목록 밀도를 확인하는 상태",
-  group: createGroupPostListGroup({
-    posts: baseGroupPostListPosts.slice(0, 2),
+  group: createGroupPostListGroup(baseGroupPostListGroupId, {
+    posts: baseGroupPostMockData.posts.filter(
+      (post) =>
+        post.group_id !== baseGroupPostListGroupId ||
+        post.id === baseGroupPostLatestPostId ||
+        post.id === baseGroupPostSecondPostId
+    ),
   }),
 }
 
