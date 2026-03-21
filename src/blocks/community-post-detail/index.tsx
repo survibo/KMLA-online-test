@@ -9,6 +9,7 @@ import {
   CommunityPostHeader,
   CommunityPostStats,
 } from "@/blocks/community-post-shared"
+import { formatRelativeTime } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
 import type {
   CommunityComment,
@@ -27,6 +28,10 @@ type CommentMeta = {
   replyCount: number
 }
 
+function countDirectReplies(commentItems: CommunityComment[], parentId: string) {
+  return commentItems.filter((item) => item.parent_id === parentId).length
+}
+
 function CommentRow({
   item,
   depth,
@@ -36,15 +41,19 @@ function CommentRow({
   const showReplyCount = depth === 0
 
   return (
-    <div className={cn("flex gap-3", depth > 0 && "ml-14")}>
-      <CommunityAvatar author={item.author} size="sm" />
-      <div className="min-w-0 flex-1 space-y-1.5">
+    <div className={cn("flex gap-2.5", depth > 0 && "ml-5")}>
+      <div className="pt-1">
+        <CommunityAvatar author={item.author} size="sm" />
+      </div>
+      <div className="min-w-0 flex-1 space-y-1">
         <div className="rounded-3xl bg-zinc-100 px-4 py-3">
           <p className="font-semibold text-zinc-900">{item.author.name}</p>
           <p className="whitespace-pre-line text-zinc-700">{item.content}</p>
         </div>
         <div className="flex flex-wrap items-center gap-1 px-1 text-sm text-zinc-500">
-          <span className="px-2 text-[0.8125rem]">{item.created_at}</span>
+          <span className="px-2 text-[0.8125rem]">
+            {formatRelativeTime(item.created_at)}
+          </span>
           <Button
             type="button"
             variant="ghost"
@@ -107,7 +116,8 @@ export function CommunityPostDetail({
     const children = childMap.get(parentId) ?? []
 
     for (const child of children) {
-      const directReplies = child.reply_count ?? childMap.get(child.id)?.length ?? 0
+      const directReplies =
+        child.reply_count ?? countDirectReplies(sortedCommentItems, child.id)
 
       flattenedComments.push({
         item: child,
@@ -129,6 +139,7 @@ export function CommunityPostDetail({
             <CommunityPostHeader
               author={post.author}
               createdAt={post.created_at}
+              timeVariant="absolute"
               showMenu
             />
 

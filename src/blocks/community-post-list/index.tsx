@@ -1,0 +1,98 @@
+import { ArrowLeft, ChevronDown, Plus, Search } from "lucide-react"
+
+import { CommunityPostCard } from "@/blocks/community-post-card"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
+import type { CommunityPostListGroup } from "./types"
+
+type CommunityPostListProps = {
+  group: CommunityPostListGroup
+  className?: string
+}
+
+export function CommunityPostList({ group, className }: CommunityPostListProps) {
+  return (
+    <section className={cn("min-h-screen bg-white text-zinc-950", className)}>
+      <header className="sticky top-0 z-10 border-b border-zinc-200/80 bg-white/95 backdrop-blur-sm">
+        <div className="px-4 py-3 sm:px-6">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex min-w-0 items-center gap-3">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="size-8 rounded-full text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950"
+                aria-label="Go back"
+              >
+                <ArrowLeft className="size-5" strokeWidth={2.35} />
+              </Button>
+              <h1 className="truncate text-[1.45rem] leading-none font-semibold tracking-tight">
+                {group.name}
+              </h1>
+            </div>
+          </div>
+
+          <div className="mt-3 flex items-center gap-2.5">
+            <div className="relative min-w-0 flex-1">
+              <Search
+                className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-400"
+                strokeWidth={2.1}
+              />
+              <Input
+                type="search"
+                placeholder="게시글 검색"
+                className="h-9 rounded-xl border-zinc-200 bg-zinc-50/80 pr-3.5 pl-9 text-sm shadow-none placeholder:text-zinc-400 focus-visible:border-zinc-300 focus-visible:ring-2 focus-visible:ring-zinc-200"
+              />
+            </div>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="h-9 rounded-xl border border-zinc-200 bg-white px-3.5 text-sm font-medium text-zinc-700 shadow-none hover:bg-zinc-50"
+                >
+                  최신순
+                  <ChevronDown className="size-4" strokeWidth={2.1} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-32 rounded-xl">
+                <DropdownMenuItem>최신순</DropdownMenuItem>
+                <DropdownMenuItem>인기순</DropdownMenuItem>
+                <DropdownMenuItem>댓글순</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </header>
+
+      <div>
+        {group.posts.map((post) => (
+          <CommunityPostCard
+            key={post.id}
+            post={post}
+            timeVariant="relative"
+          />
+        ))}
+      </div>
+
+      <div className="sticky bottom-0 flex justify-end px-4 pb-10 pt-12 sm:px-6">
+        <Button
+          type="button"
+          size="icon"
+          className="size-14 rounded-full bg-emerald-400 text-white shadow-[0_14px_32px_rgba(52,211,153,0.35)] hover:bg-emerald-500"
+          aria-label="Create post"
+        >
+          <Plus className="size-7" strokeWidth={2.2} />
+        </Button>
+      </div>
+    </section>
+  )
+}

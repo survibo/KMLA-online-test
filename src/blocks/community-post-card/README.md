@@ -21,7 +21,7 @@
 
 - `post.reaction_count`가 있으면 좋아요 수는 그 값을 우선 사용한다.
 - `post.comment_count`가 있으면 댓글 수는 그 값을 사용한다.
-- 대표 이미지는 `post_images` 중 첫 번째 항목을 사용한다.
+- 대표 이미지는 `post_images.sort_order asc` 기준 첫 번째 항목을 사용한다.
 
 권장:
 
@@ -42,16 +42,27 @@
 ## Files
 
 - `index.tsx`: 목록 카드 본체
-- `mock.ts`: 목록 카드용 샘플 데이터
+- `mock.ts`: 기준이 되는 base mock과 생성 helper
+- `mock.scenarios.ts`: 이미지 유무 같은 실험용 시나리오 mock
 - `types.ts`: 목록 카드용 타입 alias
+
+## Mock Workflow
+
+mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
+
+1. `mock.ts`의 base data는 기준 샘플로 유지한다.
+2. 이미지 유무 같은 변형은 `mock.scenarios.ts`에 scenario로 추가한다.
+3. 목록 레이아웃 검증은 scenario 이름만 보고도 상태를 알 수 있어야 한다.
 
 ## Example
 
 ```tsx
 import { CommunityPostCard } from "@/blocks/community-post-card"
-import { sampleCommunityPostCardPost } from "@/blocks/community-post-card/mock"
+import {
+  sampleCommunityPostCardScenario,
+} from "@/blocks/community-post-card/mock.scenarios"
 
 export function Example() {
-  return <CommunityPostCard post={sampleCommunityPostCardPost} />
+  return <CommunityPostCard post={sampleCommunityPostCardScenario.post} />
 }
 ```

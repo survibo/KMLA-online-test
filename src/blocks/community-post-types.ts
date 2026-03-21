@@ -1,7 +1,7 @@
 export type CommunityUser = {
   id: string
   name: string
-  img?: string | null
+  img: string | null
 }
 
 export type CommunityPostImage = {
@@ -10,17 +10,25 @@ export type CommunityPostImage = {
   url: string
   sort_order: number
   created_at: string
-  alt?: string
+  alt: string | null
   width?: number | null
   height?: number | null
 }
+
+export type CommunityReactionType =
+  | "like"
+  | "love"
+  | "laugh"
+  | "wow"
+  | "sad"
+  | "angry"
 
 export type CommunityReaction = {
   id: string
   post_id?: string
   comment_id?: string
   user_id: string
-  type: string
+  type: CommunityReactionType
   created_at: string
 }
 

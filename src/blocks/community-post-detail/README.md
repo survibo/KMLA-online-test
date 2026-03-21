@@ -42,9 +42,8 @@
 포함:
 
 - 댓글 트리 평탄화
-- `replyToName` 계산
 - depth 기반 들여쓰기 제어
-- 이미지 정렬 보조
+- `reply_count` fallback 계산
 
 포함하지 않음:
 
@@ -58,23 +57,34 @@
 ## Files
 
 - `index.tsx`: 상세 화면 본체
-- `mock.ts`: 상세 화면 샘플 데이터
+- `mock.ts`: 기준이 되는 base mock과 생성 helper
+- `mock.scenarios.ts`: 실험용 시나리오 preset 모음
 - `types.ts`: 상세 화면용 타입 alias
+
+## Mock Workflow
+
+mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
+
+1. `mock.ts`의 base data는 실제 API 응답에 가까운 기준 샘플로 유지한다.
+2. 실험 케이스는 `mock.scenarios.ts`에 별도 scenario로 추가한다.
+3. 새 시나리오는 무엇을 검증하려는지 `label`과 `description`으로 드러낸다.
+4. 렌더링 fallback을 시험할 때만 count 캐시를 의도적으로 비운다.
+
+즉, 기본 샘플을 계속 덮어쓰지 않고 "기준 mock + 실험용 시나리오"로 나눠서 관리한다.
 
 ## Example
 
 ```tsx
-import { CommunityPostDetail } from "@/blocks/community-post-detail"
 import {
-  sampleCommunityPostDetailComments,
-  sampleCommunityPostDetailPost,
-} from "@/blocks/community-post-detail/mock"
+  defaultCommunityPostDetailScenario,
+} from "@/blocks/community-post-detail/mock.scenarios"
+import { CommunityPostDetail } from "@/blocks/community-post-detail"
 
 export function Example() {
   return (
     <CommunityPostDetail
-      post={sampleCommunityPostDetailPost}
-      commentItems={sampleCommunityPostDetailComments}
+      post={defaultCommunityPostDetailScenario.post}
+      commentItems={defaultCommunityPostDetailScenario.commentItems}
     />
   )
 }

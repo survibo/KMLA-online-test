@@ -1,16 +1,7 @@
-import { CommunityPostDetail } from "@/blocks/community-post-detail";
-import {
-  sampleCommunityPostDetailComments,
-  sampleCommunityPostDetailPost,
-} from "@/blocks/community-post-detail/mock";
+import { Example } from "./Example"
 
 function App() {
-  return (
-    <CommunityPostDetail
-      post={sampleCommunityPostDetailPost}
-      commentItems={sampleCommunityPostDetailComments}
-    />
-  );
+  return <Example />
 }
 
-export default App;
+export default App

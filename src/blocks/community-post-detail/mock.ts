@@ -4,8 +4,9 @@ import type {
 } from "./types"
 
 const POST_ID = "dfb5a0a2-5ef8-4be2-87d5-3ebc4a2370a1"
+const ROOT_COMMENT_ID = "b741b315-d9c5-4568-bfb8-97a58c48bc79"
 
-export const sampleCommunityPostDetailPost: CommunityPostDetailData = {
+export const baseCommunityPostDetailPost: CommunityPostDetailData = {
   id: POST_ID,
   group_id: "c108d2a4-1f4d-4db5-bd75-5b413d4e6a29",
   author_id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
@@ -110,9 +111,9 @@ export const sampleCommunityPostDetailPost: CommunityPostDetailData = {
   ],
 }
 
-export const sampleCommunityPostDetailComments: CommunityPostDetailCommentData[] = [
+export const baseCommunityPostDetailComments: CommunityPostDetailCommentData[] = [
   {
-    id: "b741b315-d9c5-4568-bfb8-97a58c48bc79",
+    id: ROOT_COMMENT_ID,
     post_id: POST_ID,
     author_id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
     parent_id: null,
@@ -129,21 +130,21 @@ export const sampleCommunityPostDetailComments: CommunityPostDetailCommentData[]
     comment_reactions: [
       {
         id: "7ff70689-b3a7-4e06-a370-c2b7a895633c",
-        comment_id: "b741b315-d9c5-4568-bfb8-97a58c48bc79",
+        comment_id: ROOT_COMMENT_ID,
         user_id: "fe40d832-dab0-48fd-82ea-5e28d8d2ff67",
         type: "like",
         created_at: "2026-03-20T14:57:00+09:00",
       },
       {
         id: "fa3ca570-8baa-47c3-b772-e97d85dc79fd",
-        comment_id: "b741b315-d9c5-4568-bfb8-97a58c48bc79",
+        comment_id: ROOT_COMMENT_ID,
         user_id: "77709928-52dc-4f5f-ae81-dc18edb641e6",
         type: "like",
         created_at: "2026-03-20T14:58:00+09:00",
       },
       {
         id: "425f11d2-b20c-4682-89b7-0fa7560f9b58",
-        comment_id: "b741b315-d9c5-4568-bfb8-97a58c48bc79",
+        comment_id: ROOT_COMMENT_ID,
         user_id: "0859f193-a0f4-4eeb-b4dc-a3bc69980c49",
         type: "like",
         created_at: "2026-03-20T15:00:00+09:00",
@@ -154,7 +155,7 @@ export const sampleCommunityPostDetailComments: CommunityPostDetailCommentData[]
     id: "fc53113f-9c62-4e17-934a-845f4a74d1cf",
     post_id: POST_ID,
     author_id: "fe40d832-dab0-48fd-82ea-5e28d8d2ff67",
-    parent_id: "b741b315-d9c5-4568-bfb8-97a58c48bc79",
+    parent_id: ROOT_COMMENT_ID,
     author: {
       id: "fe40d832-dab0-48fd-82ea-5e28d8d2ff67",
       name: "28기 박채은",
@@ -179,7 +180,7 @@ export const sampleCommunityPostDetailComments: CommunityPostDetailCommentData[]
     id: "4335601d-50dd-4d4f-87df-c4528965e1cf",
     post_id: POST_ID,
     author_id: "77709928-52dc-4f5f-ae81-dc18edb641e6",
-    parent_id: "b741b315-d9c5-4568-bfb8-97a58c48bc79",
+    parent_id: ROOT_COMMENT_ID,
     author: {
       id: "77709928-52dc-4f5f-ae81-dc18edb641e6",
       name: "29기 김서윤",
@@ -196,7 +197,7 @@ export const sampleCommunityPostDetailComments: CommunityPostDetailCommentData[]
     id: "1ac87654-188c-4527-a115-d8f6d589c51b",
     post_id: POST_ID,
     author_id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
-    parent_id: "b741b315-d9c5-4568-bfb8-97a58c48bc79",
+    parent_id: ROOT_COMMENT_ID,
     author: {
       id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
       name: "28기 이주형",
@@ -218,3 +219,41 @@ export const sampleCommunityPostDetailComments: CommunityPostDetailCommentData[]
     ],
   },
 ]
+
+function cloneComment(
+  comment: CommunityPostDetailCommentData
+): CommunityPostDetailCommentData {
+  return {
+    ...comment,
+    author: { ...comment.author },
+    comment_reactions: comment.comment_reactions?.map((reaction) => ({
+      ...reaction,
+    })),
+  }
+}
+
+export function createCommunityPostDetailPost(
+  overrides: Partial<CommunityPostDetailData> = {}
+): CommunityPostDetailData {
+  return {
+    ...baseCommunityPostDetailPost,
+    ...overrides,
+    author: { ...(overrides.author ?? baseCommunityPostDetailPost.author) },
+    post_images: (overrides.post_images ?? baseCommunityPostDetailPost.post_images)?.map(
+      (image) => ({ ...image })
+    ),
+    post_reactions: (
+      overrides.post_reactions ?? baseCommunityPostDetailPost.post_reactions
+    )?.map((reaction) => ({ ...reaction })),
+  }
+}
+
+export function createCommunityPostDetailComments(
+  comments: CommunityPostDetailCommentData[] = baseCommunityPostDetailComments
+) {
+  return comments.map(cloneComment)
+}
+
+export const sampleCommunityPostDetailPost = createCommunityPostDetailPost()
+export const sampleCommunityPostDetailComments =
+  createCommunityPostDetailComments()

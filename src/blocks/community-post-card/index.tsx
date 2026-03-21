@@ -8,10 +8,15 @@ import type { CommunityPost } from "@/blocks/community-post-types"
 
 type CommunityPostCardProps = {
   post: CommunityPost
+  timeVariant?: "absolute" | "relative"
   className?: string
 }
 
-export function CommunityPostCard({ post, className }: CommunityPostCardProps) {
+export function CommunityPostCard({
+  post,
+  timeVariant = "absolute",
+  className,
+}: CommunityPostCardProps) {
   return (
     <article
       className={cn(
@@ -20,7 +25,11 @@ export function CommunityPostCard({ post, className }: CommunityPostCardProps) {
       )}
     >
       <div className="mx-auto w-full max-w-4xl space-y-4 px-4 py-4 sm:px-6">
-        <CommunityPostHeader author={post.author} createdAt={post.created_at} />
+        <CommunityPostHeader
+          author={post.author}
+          createdAt={post.created_at}
+          timeVariant={timeVariant}
+        />
 
         <div className="space-y-3">
           {post.title || post.content ? (

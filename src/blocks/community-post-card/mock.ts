@@ -2,7 +2,7 @@ import type { CommunityPostCardData } from "./types"
 
 const POST_ID = "dfb5a0a2-5ef8-4be2-87d5-3ebc4a2370a1"
 
-export const sampleCommunityPostCardPost: CommunityPostCardData = {
+export const baseCommunityPostCardPost: CommunityPostCardData = {
   id: POST_ID,
   group_id: "c108d2a4-1f4d-4db5-bd75-5b413d4e6a29",
   author_id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
@@ -55,3 +55,21 @@ export const sampleCommunityPostCardPost: CommunityPostCardData = {
     },
   ],
 }
+
+export function createCommunityPostCardPost(
+  overrides: Partial<CommunityPostCardData> = {}
+): CommunityPostCardData {
+  return {
+    ...baseCommunityPostCardPost,
+    ...overrides,
+    author: { ...(overrides.author ?? baseCommunityPostCardPost.author) },
+    post_images: (overrides.post_images ?? baseCommunityPostCardPost.post_images)?.map(
+      (image) => ({ ...image })
+    ),
+    post_reactions: (
+      overrides.post_reactions ?? baseCommunityPostCardPost.post_reactions
+    )?.map((reaction) => ({ ...reaction })),
+  }
+}
+
+export const sampleCommunityPostCardPost = createCommunityPostCardPost()

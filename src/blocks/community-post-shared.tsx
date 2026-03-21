@@ -1,5 +1,6 @@
 import { EllipsisVertical, MessageCircle, ThumbsUp } from "lucide-react"
 
+import { formatIsoDateTime, formatRelativeTime } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -48,12 +49,19 @@ export function CommunityAvatar({
 export function CommunityPostHeader({
   author,
   createdAt,
+  timeVariant = "absolute",
   showMenu = false,
 }: {
   author: CommunityUser
   createdAt: string
+  timeVariant?: "absolute" | "relative"
   showMenu?: boolean
 }) {
+  const formattedCreatedAt =
+    timeVariant === "relative"
+      ? formatRelativeTime(createdAt)
+      : formatIsoDateTime(createdAt)
+
   return (
     <div className="flex items-start justify-between gap-4">
       <div className="flex items-center gap-2.5">
@@ -63,7 +71,7 @@ export function CommunityPostHeader({
             {author.name}
           </p>
           <p className="text-[0.875rem] leading-5 font-medium text-zinc-500">
-            {createdAt}
+            {formattedCreatedAt}
           </p>
         </div>
       </div>

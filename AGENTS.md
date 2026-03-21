@@ -97,6 +97,13 @@ mock data는 단순 샘플이 아니라 실제 응답을 흉내 내는 테스트
 - 스키마에 있는 캐시 컬럼은 mock에도 반영한다.
 - 화면 로직이 그 mock만 보고도 실제 흐름을 검증할 수 있어야 한다.
 
+권장 구조:
+
+- `mock.ts`는 기준이 되는 base mock과 생성 helper를 둔다.
+- 실험용 변형은 `mock.scenarios.ts` 같은 별도 파일에 둔다.
+- base mock은 실제 응답에 가깝게 유지하고, edge case 실험은 scenario에서 표현한다.
+- scenario 이름만 봐도 무엇을 검증하는지 알 수 있어야 한다.
+
 mock을 점검해야 하는 경우:
 
 - 스키마가 바뀐 경우
@@ -140,6 +147,7 @@ block은 아래 구조를 기본으로 한다.
 src/blocks/<block-name>/
   index.tsx
   mock.ts
+  mock.scenarios.ts
   types.ts
   README.md
 ```
@@ -147,9 +155,12 @@ src/blocks/<block-name>/
 역할:
 
 - `index.tsx`: block 본체
-- `mock.ts`: 샘플 데이터
+- `mock.ts`: 기준 샘플과 생성 helper
+- `mock.scenarios.ts`: 실험용 preset mock
 - `types.ts`: block 전용 타입
 - `README.md`: 이 block의 규칙, 사용법, 결정사항
+
+`mock.scenarios.ts`는 선택 사항이지만, mock을 바꿔가며 자주 실험하는 block이면 두는 쪽을 권장한다.
 
 공통 타입이나 공용 조각은 block 바깥으로 분리할 수 있다.
 
@@ -159,12 +170,14 @@ src/blocks/<block-name>/
 
 - `types.ts`
 - `mock.ts`
+- `mock.scenarios.ts` (있다면)
 - `README.md`
 
 의미는 다음과 같다.
 
 - 타입이 현재 props와 데이터 shape를 아직 설명하는가
-- mock이 새 구조와 새 규칙을 반영하는가
+- base mock이 새 구조와 새 규칙을 반영하는가
+- scenario mock이 실험 케이스를 읽기 쉽게 설명하는가
 - README가 현재 동작과 결정사항을 설명하는가
 
 즉, block 변경은 `index.tsx`만 수정하고 끝내지 않는다.
