@@ -20,7 +20,7 @@ export const sampleCommunityPostDetailPost: CommunityPostDetailData = {
   title: "민사관 의류장 납품 안내",
   content:
     "안녕하세요. 38대 학생자치회입니다.\n의류장 비용 납품 관련 안내드립니다.",
-  comment_count: 4,
+  comment_count: 1,
   reaction_count: 6,
   post_images: [
     {
@@ -122,7 +122,7 @@ export const sampleCommunityPostDetailComments: CommunityPostDetailCommentData[]
       img: null,
     },
     content: "명단은 오늘 저녁까지 댓글로 남겨 주세요.",
-    reply_count: 2,
+    reply_count: 3,
     created_at: "2026-03-20T14:55:00+09:00",
     updated_at: null,
     deleted_at: null,
@@ -161,7 +161,7 @@ export const sampleCommunityPostDetailComments: CommunityPostDetailCommentData[]
       img: null,
     },
     content: "사이즈 체크표도 같이 올려 주실 수 있을까요?",
-    reply_count: 1,
+    reply_count: 0,
     created_at: "2026-03-20T15:11:00+09:00",
     updated_at: null,
     deleted_at: null,
@@ -196,7 +196,7 @@ export const sampleCommunityPostDetailComments: CommunityPostDetailCommentData[]
     id: "1ac87654-188c-4527-a115-d8f6d589c51b",
     post_id: POST_ID,
     author_id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
-    parent_id: "fc53113f-9c62-4e17-934a-845f4a74d1cf",
+    parent_id: "b741b315-d9c5-4568-bfb8-97a58c48bc79",
     author: {
       id: "1d41df50-5d98-4e37-b12e-e9d830f04f34",
       name: "28기 이주형",

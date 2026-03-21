@@ -5,15 +5,15 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
   CommunityAvatar,
+  CommunityPostGallery,
   CommunityPostHeader,
   CommunityPostStats,
-} from "@/components/blocks/community-post-shared"
+} from "@/blocks/community-post-shared"
 import { cn } from "@/lib/utils"
 import type {
   CommunityComment,
   CommunityPost,
-  CommunityPostImage,
-} from "@/components/blocks/community-post-types"
+} from "@/blocks/community-post-types"
 
 type CommunityPostDetailProps = {
   post: CommunityPost
@@ -25,94 +25,15 @@ type CommentMeta = {
   item: CommunityComment
   depth: number
   replyCount: number
-  replyToName?: string
-}
-
-function ImageMosaic({
-  images = [],
-  hiddenImageCount = 0,
-}: {
-  images?: CommunityPostImage[]
-  hiddenImageCount?: number
-}) {
-  const totalImageCount = images.length + hiddenImageCount
-
-  if (images.length === 0) return null
-
-  const [featuredImage, secondImage, thirdImage] = images
-
-  if (totalImageCount === 1) {
-    return (
-      <div className="overflow-hidden rounded-[1.5rem] bg-zinc-100">
-        <img
-          src={featuredImage.url}
-          alt={featuredImage.alt ?? "Post attachment preview"}
-          className="h-auto w-full object-cover"
-        />
-      </div>
-    )
-  }
-
-  if (totalImageCount === 2) {
-    return (
-      <div className="relative overflow-hidden rounded-[1.5rem] bg-zinc-100">
-        <img
-          src={featuredImage.url}
-          alt={featuredImage.alt ?? "Post attachment preview"}
-          className="h-auto w-full object-cover"
-        />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/28 text-6xl font-bold text-white">
-          +1
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="grid grid-cols-[1.05fr_0.95fr] gap-2">
-      <div className="overflow-hidden rounded-[1.5rem] bg-zinc-100">
-        <img
-          src={featuredImage.url}
-          alt={featuredImage.alt ?? "Post attachment preview"}
-          className="h-full min-h-[420px] w-full object-cover"
-        />
-      </div>
-
-      <div className="grid gap-2">
-        {[secondImage, thirdImage].filter(Boolean).map((image, index) => {
-          const remainingCount = totalImageCount - 2
-          const showOverlay = index === 1 && remainingCount > 1
-
-          return (
-            <div
-              key={image.id ?? `${image.url}-${index}`}
-              className="relative overflow-hidden rounded-[1.5rem] bg-zinc-100"
-            >
-              <img
-                src={image.url}
-                alt={image.alt ?? "Post attachment preview"}
-                className="h-[206px] w-full object-cover"
-              />
-              {showOverlay ? (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/25 text-6xl font-bold text-white">
-                  +{remainingCount - 1}
-                </div>
-              ) : null}
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
 }
 
 function CommentRow({
   item,
   depth,
   replyCount,
-  replyToName,
 }: CommentMeta) {
   const likes = item.comment_reactions?.length ?? 0
+  const showReplyCount = depth === 0
 
   return (
     <div className={cn("flex gap-3", depth > 0 && "ml-14")}>
@@ -120,14 +41,7 @@ function CommentRow({
       <div className="min-w-0 flex-1 space-y-1.5">
         <div className="rounded-3xl bg-zinc-100 px-4 py-3">
           <p className="font-semibold text-zinc-900">{item.author.name}</p>
-          <p className="whitespace-pre-line text-zinc-700">
-            {replyToName ? (
-              <span className="mr-1 font-medium text-zinc-500">
-                @{replyToName}
-              </span>
-            ) : null}
-            {item.content}
-          </p>
+          <p className="whitespace-pre-line text-zinc-700">{item.content}</p>
         </div>
         <div className="flex flex-wrap items-center gap-1 px-1 text-sm text-zinc-500">
           <span className="px-2 text-[0.8125rem]">{item.created_at}</span>
@@ -147,7 +61,7 @@ function CommentRow({
             className="h-7 rounded-full px-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800"
           >
             <MessageCircle className="size-4" strokeWidth={2.2} />
-            <span>{replyCount}</span>
+            {showReplyCount ? <span>{replyCount}</span> : null}
           </Button>
         </div>
       </div>
@@ -161,10 +75,6 @@ export function CommunityPostDetail({
   className,
 }: CommunityPostDetailProps) {
   const images = post.post_images ?? []
-  const hiddenImageCount = Math.max(images.length - 3, 0)
-  const visibleImages = [...images]
-    .sort((a, b) => a.sort_order - b.sort_order)
-    .slice(0, 3)
   const sortedCommentItems = [...commentItems].sort(
     (a, b) =>
       new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
@@ -172,8 +82,20 @@ export function CommunityPostDetail({
   const commentMap = new Map(sortedCommentItems.map((item) => [item.id, item]))
   const childMap = new Map<string | null, CommunityComment[]>()
 
+  function getTopLevelParentId(comment: CommunityComment) {
+    let currentParentId = comment.parent_id ?? null
+
+    while (currentParentId) {
+      const parentComment = commentMap.get(currentParentId)
+      if (!parentComment?.parent_id) return parentComment?.id ?? currentParentId
+      currentParentId = parentComment.parent_id
+    }
+
+    return null
+  }
+
   for (const item of sortedCommentItems) {
-    const parentKey = item.parent_id ?? null
+    const parentKey = getTopLevelParentId(item)
     const siblings = childMap.get(parentKey) ?? []
     siblings.push(item)
     childMap.set(parentKey, siblings)
@@ -186,14 +108,11 @@ export function CommunityPostDetail({
 
     for (const child of children) {
       const directReplies = child.reply_count ?? childMap.get(child.id)?.length ?? 0
-      const parentComment = child.parent_id ? commentMap.get(child.parent_id) : undefined
-      const isNestedReply = actualDepth >= 2
 
       flattenedComments.push({
         item: child,
         depth: Math.min(actualDepth, 1),
         replyCount: directReplies,
-        replyToName: isNestedReply ? parentComment?.author.name : undefined,
       })
 
       walkComments(child.id, actualDepth + 1)
@@ -228,12 +147,7 @@ export function CommunityPostDetail({
               </div>
             ) : null}
 
-            <div className="space-y-4">
-              <ImageMosaic
-                images={visibleImages}
-                hiddenImageCount={hiddenImageCount}
-              />
-            </div>
+            <CommunityPostGallery images={images} />
 
             <CommunityPostStats post={post} />
 

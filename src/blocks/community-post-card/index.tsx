@@ -1,6 +1,10 @@
 import { cn } from "@/lib/utils"
-import { CommunityPostHeader, CommunityPostStats } from "@/components/blocks/community-post-shared"
-import type { CommunityPost } from "@/components/blocks/community-post-types"
+import {
+  CommunityPostGallery,
+  CommunityPostHeader,
+  CommunityPostStats,
+} from "@/blocks/community-post-shared"
+import type { CommunityPost } from "@/blocks/community-post-types"
 
 type CommunityPostCardProps = {
   post: CommunityPost
@@ -8,8 +12,6 @@ type CommunityPostCardProps = {
 }
 
 export function CommunityPostCard({ post, className }: CommunityPostCardProps) {
-  const primaryImage = post.post_images?.[0]
-
   return (
     <article
       className={cn(
@@ -34,15 +36,10 @@ export function CommunityPostCard({ post, className }: CommunityPostCardProps) {
             </div>
           ) : null}
 
-          {primaryImage ? (
-            <div className="overflow-hidden rounded-[1.5rem] bg-zinc-100">
-              <img
-                src={primaryImage.url}
-                alt={primaryImage.alt ?? `${post.title ?? "Post"} attached image`}
-                className="h-auto w-full object-cover"
-              />
-            </div>
-          ) : null}
+          <CommunityPostGallery
+            images={post.post_images}
+            altFallback={`${post.title ?? "Post"} attached image`}
+          />
         </div>
 
         <CommunityPostStats post={post} />

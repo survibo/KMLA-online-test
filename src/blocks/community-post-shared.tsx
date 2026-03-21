@@ -10,7 +10,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import type { CommunityPost, CommunityUser } from "./community-post-types"
+import type {
+  CommunityPost,
+  CommunityPostImage,
+  CommunityUser,
+} from "./community-post-types"
 
 function getInitials(name: string) {
   return name
@@ -99,7 +103,7 @@ export function CommunityPostStats({
   const comments = post.comment_count ?? 0
 
   return (
-    <div className={cn("flex items-center gap-1.5 text-zinc-500", className)}>
+    <div className={cn("flex items-center gap-1 text-zinc-500", className)}>
       <Button
         type="button"
         variant="ghost"
@@ -118,6 +122,69 @@ export function CommunityPostStats({
         <MessageCircle className="size-4.5" strokeWidth={2.2} />
         <span className="font-medium">{comments}</span>
       </Button>
+    </div>
+  )
+}
+
+export function CommunityPostGallery({
+  images = [],
+  className,
+  altFallback = "Post attachment preview",
+}: {
+  images?: CommunityPostImage[]
+  className?: string
+  altFallback?: string
+}) {
+  const sortedImages = [...images].sort((a, b) => a.sort_order - b.sort_order)
+  const totalImageCount = sortedImages.length
+
+  if (totalImageCount === 0) return null
+
+  if (totalImageCount <= 3) {
+    const featuredImage = sortedImages[0]
+
+    return (
+      <div className={cn("relative overflow-hidden rounded-[1.5rem] bg-zinc-100", className)}>
+        <img
+          src={featuredImage.url}
+          alt={featuredImage.alt ?? altFallback}
+          className="aspect-square w-full object-cover"
+        />
+        {totalImageCount > 1 ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/28 text-6xl font-bold text-white">
+            +{totalImageCount - 1}
+          </div>
+        ) : null}
+      </div>
+    )
+  }
+
+  const visibleImages = sortedImages.slice(0, 4)
+  const hiddenCount = totalImageCount - 4
+
+  return (
+    <div className={cn("grid grid-cols-2 gap-2", className)}>
+      {visibleImages.map((image, index) => {
+        const showOverlay = index === 3 && hiddenCount > 0
+
+        return (
+          <div
+            key={image.id ?? `${image.url}-${index}`}
+            className="relative overflow-hidden rounded-[1.5rem] bg-zinc-100"
+          >
+            <img
+              src={image.url}
+              alt={image.alt ?? altFallback}
+              className="aspect-square w-full object-cover"
+            />
+            {showOverlay ? (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/28 text-5xl font-bold text-white">
+                +{hiddenCount}
+              </div>
+            ) : null}
+          </div>
+        )
+      })}
     </div>
   )
 }

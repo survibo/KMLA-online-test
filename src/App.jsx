@@ -1,8 +1,8 @@
-import { CommunityPostDetail } from "@/components/blocks/community-post-detail";
+import { CommunityPostDetail } from "@/blocks/community-post-detail";
 import {
   sampleCommunityPostDetailComments,
   sampleCommunityPostDetailPost,
-} from "@/components/blocks/community-post-detail/mock";
+} from "@/blocks/community-post-detail/mock";
 
 function App() {
   return (
