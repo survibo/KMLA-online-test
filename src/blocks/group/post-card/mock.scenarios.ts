@@ -222,15 +222,42 @@ export const groupPostCardWithoutImageWithoutCommentsScenario: GroupPostCardScen
   }),
 }
 
+export const groupPostCardLongContentWithoutImageWithoutCommentsScenario: GroupPostCardScenario = {
+  id: "long-content-without-image-without-comments",
+  label: "긴 본문만",
+  description: "대표 이미지와 댓글 없이 긴 본문 preview와 더보기 동작만 확인하는 카드 상태",
+  post: createGroupPostCardPost(baseGroupPostPrimaryPostId, {
+    posts: baseGroupPostMockData.posts.map((post) =>
+      post.id === baseGroupPostPrimaryPostId
+        ? {
+            ...post,
+            comment_count: 0,
+            content:
+              "학생회 굿즈 수요 조사를 이번 주 금요일까지 다시 받습니다.\n" +
+              "이전 폼에서 사이즈 선택을 망설였던 분들은 이번에 여유 있게 확인해 주세요.\n" +
+              "후드집업, 반팔, 키링 조합별로 재고 예상 수량을 잡아야 해서 대략적인 희망 수량도 같이 받고 있습니다.\n" +
+              "특히 이번에는 단체 주문 이후 추가 제작이 바로 어렵기 때문에, 고민 중인 분들도 우선 의사를 남겨 주시면 전체 수량 예측에 도움이 됩니다.\n" +
+              "실물 샘플 사진은 오늘 저녁에 공지 댓글로 더 올릴 예정이고, 색상 비교 사진도 같이 첨부하겠습니다.",
+          }
+        : post
+    ),
+    post_images: [],
+    post_comments: baseGroupPostMockData.post_comments.filter(
+      (comment) => comment.post_id !== baseGroupPostPrimaryPostId
+    ),
+  }),
+}
+
 export const groupPostCardScenarios: GroupPostCardScenario[] = [
   groupPostCardWithImageScenario,
   groupPostCardBusyDiscussionScenario,
   groupPostCardWithoutTitleScenario,
   groupPostCardWithoutCommentsScenario,
   groupPostCardWithoutImageWithoutCommentsScenario,
+  groupPostCardLongContentWithoutImageWithoutCommentsScenario,
 ]
 
-export const activeGroupPostCardScenarioIndex = 0 // 0 ~ 4, total 5 scenarios
+export const activeGroupPostCardScenarioIndex = 0 // 0 ~ 5, total 6 scenarios
 
 export const activeGroupPostCardScenario =
   groupPostCardScenarios[activeGroupPostCardScenarioIndex]

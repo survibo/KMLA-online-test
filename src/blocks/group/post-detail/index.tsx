@@ -1,14 +1,10 @@
-import { EllipsisVertical, MessageCircle, ThumbsUp } from "lucide-react"
+import { useRef, useState } from "react"
+import { MessageCircle, ThumbsUp } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea"
 import { formatRelativeTime } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
 import type { GroupComment, GroupPost } from "@/blocks/group/types"
@@ -122,43 +118,71 @@ export function GroupPostDetail({
   commentItems = [],
   className,
 }: GroupPostDetailProps) {
+  const composerRef = useRef<HTMLDivElement | null>(null)
+  const [draftComment, setDraftComment] = useState("")
+  const [isComposerActive, setIsComposerActive] = useState(false)
+  const shouldShowSubmitButton =
+    isComposerActive && draftComment.trim().length > 0
+
   return (
     <section className={cn("w-full bg-background", className)}>
-      <div className="mx-auto w-full max-w-4xl px-4 py-4 sm:px-6">
+      <div className="mx-auto w-full max-w-4xl px-4 py-4 pb-28 sm:px-6 sm:pb-32">
           <GroupPostSummary
             post={post}
-            trailing={
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full text-text-faint hover:bg-muted hover:text-text-strong"
-                    aria-label="More options"
-                  >
-                    <EllipsisVertical className="size-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40">
-                  <DropdownMenuItem>Share</DropdownMenuItem>
-                  <DropdownMenuItem>Save</DropdownMenuItem>
-                  <DropdownMenuItem variant="destructive">Report</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            }
           />
 
-          {commentItems.length > 0 ? (
-            <div className="space-y-5">
-              <Separator className="bg-border" />
+          <div className="space-y-5">
+            <Separator className="bg-border" />
+            {commentItems.length > 0 ? (
               <GroupCommentThread
                 commentItems={commentItems}
                 postAuthorId={post.author_id}
               />
+            ) : (
+              <div className="px-4 py-6 text-center text-sm text-text-faint">
+                아직 댓글이 없습니다. 첫 댓글을 남겨보세요.
+              </div>
+            )}
+          </div>
+      </div>
+
+      <div className="sticky bottom-0 border-t border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/85">
+        <div className="mx-auto w-full max-w-4xl px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:px-6">
+          <div
+            ref={composerRef}
+            className="flex flex-col gap-3"
+            onFocusCapture={() => setIsComposerActive(true)}
+            onBlurCapture={(event) => {
+              const nextFocusedElement = event.relatedTarget as Node | null
+
+              if (nextFocusedElement && composerRef.current?.contains(nextFocusedElement)) {
+                return
+              }
+
+              if (!draftComment.trim()) {
+                setIsComposerActive(false)
+              }
+            }}
+          >
+            <Textarea
+              placeholder="이 게시글에 댓글 남기기"
+              value={draftComment}
+              onChange={(event) => setDraftComment(event.target.value)}
+              className="min-h-10 rounded-2xl border-border bg-muted px-4 py-3 text-sm text-text-strong shadow-none placeholder:text-text-faint focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
+            />
+            <div className="flex min-h-9 justify-end">
+              {shouldShowSubmitButton ? (
+                <Button
+                  type="button"
+                  className="rounded-full bg-emerald-500 px-4 text-white shadow-none hover:bg-emerald-600 dark:bg-emerald-500 dark:text-white dark:hover:bg-emerald-400"
+                >
+                  댓글 작성
+                </Button>
+              ) : null}
             </div>
-          ) : null}
+          </div>
         </div>
+      </div>
     </section>
   )
 }
