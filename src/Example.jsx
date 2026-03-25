@@ -1,8 +1,6 @@
-import {
-  activeChatRoomScenario,
-} from "@/blocks/chat/room/mock.scenarios"
-import { ChatRoom } from "@/blocks/chat/room"
+import { MainFooter } from "@/blocks/main/footer"
+import { activeMainFooterScenario } from "@/blocks/main/footer/mock.scenarios"
 
 export function Example() {
-  return <ChatRoom data={activeChatRoomScenario.data} />
+  return <MainFooter data={activeMainFooterScenario.data} />
 }
