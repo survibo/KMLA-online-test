@@ -443,3 +443,27 @@ export function getGroupPostListGroupById(
     posts,
   }
 }
+
+export function getGroupPostImageViewerData(
+  imageId: string,
+  data: GroupPostMockData = baseGroupPostMockData
+) {
+  const activeImage = data.post_images.find((image) => image.id === imageId)
+
+  if (!activeImage) {
+    throw new Error(`Missing group post image for ${imageId}`)
+  }
+
+  const post = getGroupPostById(activeImage.post_id, data)
+  const images = [...(post.post_images ?? [])].sort(
+    (leftImage, rightImage) => leftImage.sort_order - rightImage.sort_order
+  )
+  const activeImageIndex = images.findIndex((image) => image.id === imageId)
+
+  return {
+    post,
+    images,
+    activeImage,
+    activeImageIndex,
+  }
+}

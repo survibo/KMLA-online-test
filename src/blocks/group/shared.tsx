@@ -1,21 +1,14 @@
-import { useState, type ReactNode } from "react"
+import { type ReactNode } from "react"
 import {
-  ChevronLeft,
-  ChevronRight,
   EllipsisVertical,
   MessageCircle,
   Share2,
   ThumbsUp,
 } from "lucide-react"
+import { useLocation, useNavigate } from "react-router-dom"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -171,97 +164,49 @@ export function GroupPostGallery({
   images?: GroupPostImage[]
   altFallback?: string
 }) {
+  const location = useLocation()
+  const navigate = useNavigate()
   const sortedImages = [...images].sort((a, b) => a.sort_order - b.sort_order)
-  const [isViewerOpen, setIsViewerOpen] = useState(false)
-  const [activeImageIndex, setActiveImageIndex] = useState(0)
   const featuredImage = sortedImages[0]
-  const activeImage = sortedImages[activeImageIndex] ?? featuredImage
 
   if (!featuredImage) return null
 
+  function openImageViewer(imageId: string) {
+    navigate(
+      {
+        pathname: "/photo",
+        search: `?image=${imageId}`,
+      },
+      {
+        state: {
+          fromPath: `${location.pathname}${location.search}`,
+        },
+      }
+    )
+  }
+
   return (
-    <>
-      <button
-        type="button"
-        className="relative block w-full overflow-hidden rounded-[1.5rem] bg-muted"
-        onClick={() => {
-          setActiveImageIndex(0)
-          setIsViewerOpen(true)
-        }}
-        aria-label={
-          sortedImages.length > 1
-            ? `게시글 이미지 ${sortedImages.length}장을 크게 보기`
-            : "게시글 이미지를 크게 보기"
-        }
-      >
-        <img
-          src={featuredImage.url}
-          alt={featuredImage.alt ?? altFallback}
-          className="aspect-square w-full object-cover transition-transform duration-200 hover:scale-[1.01]"
-        />
-        {sortedImages.length > 1 ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/28 text-6xl font-bold text-white">
-            +{sortedImages.length - 1}
-          </div>
-        ) : null}
-      </button>
-
-      <Dialog open={isViewerOpen} onOpenChange={setIsViewerOpen}>
-        <DialogContent
-          className="max-w-5xl border-border bg-background p-3 sm:p-4"
-          showCloseButton={false}
-        >
-          <DialogTitle className="sr-only">게시글 이미지 보기</DialogTitle>
-          <DialogDescription className="sr-only">
-            게시글에 첨부된 이미지를 크게 보고 좌우로 이동할 수 있습니다.
-          </DialogDescription>
-
-          <div className="relative overflow-hidden rounded-[1.25rem] bg-muted">
-            <img
-              src={activeImage?.url}
-              alt={activeImage?.alt ?? altFallback}
-              className="max-h-[78vh] w-full object-contain"
-            />
-
-            {sortedImages.length > 1 ? (
-              <>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="icon"
-                  className="absolute left-3 top-1/2 size-10 -translate-y-1/2 rounded-full bg-background/90 text-text-strong shadow-sm hover:bg-background active:-translate-y-1/2"
-                  onClick={() =>
-                    setActiveImageIndex((currentIndex) =>
-                      currentIndex === 0 ? sortedImages.length - 1 : currentIndex - 1
-                    )
-                  }
-                  aria-label="이전 이미지"
-                >
-                  <ChevronLeft className="size-5" strokeWidth={2.2} />
-                </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="icon"
-                  className="absolute right-3 top-1/2 size-10 -translate-y-1/2 rounded-full bg-background/90 text-text-strong shadow-sm hover:bg-background active:-translate-y-1/2"
-                  onClick={() =>
-                    setActiveImageIndex((currentIndex) =>
-                      currentIndex === sortedImages.length - 1 ? 0 : currentIndex + 1
-                    )
-                  }
-                  aria-label="다음 이미지"
-                >
-                  <ChevronRight className="size-5" strokeWidth={2.2} />
-                </Button>
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-background/90 px-3 py-1 text-xs font-medium text-text-strong shadow-sm">
-                  {activeImageIndex + 1} / {sortedImages.length}
-                </div>
-              </>
-            ) : null}
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
+    <button
+      type="button"
+      className="relative block w-full overflow-hidden rounded-[1.5rem] bg-muted"
+      onClick={() => openImageViewer(featuredImage.id)}
+      aria-label={
+        sortedImages.length > 1
+          ? `게시글 이미지 ${sortedImages.length}장을 크게 보기`
+          : "게시글 이미지를 크게 보기"
+      }
+    >
+      <img
+        src={featuredImage.url}
+        alt={featuredImage.alt ?? altFallback}
+        className="aspect-square w-full object-cover transition-transform duration-200 hover:scale-[1.01]"
+      />
+      {sortedImages.length > 1 ? (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/28 text-6xl font-bold text-white">
+          +{sortedImages.length - 1}
+        </div>
+      ) : null}
+    </button>
   )
 }
 

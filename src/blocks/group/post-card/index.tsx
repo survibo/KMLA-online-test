@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
+import { useState } from "react"
 
 import { cn } from "@/lib/utils"
 import type { GroupPost } from "@/blocks/group/types"
@@ -12,72 +12,41 @@ type GroupPostCardProps = {
   post: GroupPost
   timeVariant?: "absolute" | "relative"
   className?: string
+  commentsOpen?: boolean
+  onCommentClick?: () => void
+  onCommentsOpenChange?: (open: boolean) => void
 }
 
 export function GroupPostCard({
   post,
   timeVariant = "absolute",
   className,
+  commentsOpen,
+  onCommentClick,
+  onCommentsOpenChange,
 }: GroupPostCardProps) {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const [localCommentsOpen, setLocalCommentsOpen] = useState(false)
   const commentItems = post.post_comments ?? []
-  const openCommentsPostId = searchParams.get("comments")
-  const isCommentsOpen = openCommentsPostId === post.id
-
-  function updateCommentsQuery(nextPostId: string | null, replace = false) {
-    const nextSearchParams = new URLSearchParams(searchParams)
-
-    if (nextPostId) {
-      nextSearchParams.set("comments", nextPostId)
-    } else {
-      nextSearchParams.delete("comments")
-    }
-
-    const nextSearch = nextSearchParams.toString()
-
-    navigate(
-      {
-        pathname: location.pathname,
-        search: nextSearch ? `?${nextSearch}` : "",
-      },
-      {
-        replace,
-        state: nextPostId
-          ? {
-              ...location.state,
-              commentsDrawerSourcePath: `${location.pathname}${location.search}`,
-              commentsDrawerPostId: nextPostId,
-            }
-          : location.state,
-      }
-    )
-  }
+  const isCommentsOpen = commentsOpen ?? localCommentsOpen
+  const isCommentsControlled =
+    commentsOpen !== undefined || Boolean(onCommentClick || onCommentsOpenChange)
 
   function handleCommentsOpenChange(nextOpen: boolean) {
-    if (nextOpen) {
-      if (!isCommentsOpen) {
-        updateCommentsQuery(post.id)
-      }
-
+    if (onCommentsOpenChange) {
+      onCommentsOpenChange(nextOpen)
       return
     }
 
-    if (!isCommentsOpen) return
+    setLocalCommentsOpen(nextOpen)
+  }
 
-    const sourcePath =
-      typeof location.state?.commentsDrawerSourcePath === "string"
-        ? location.state.commentsDrawerSourcePath
-        : null
-    const currentPath = `${location.pathname}${location.search}`
-
-    if (sourcePath && sourcePath !== currentPath) {
-      navigate(-1)
+  function handleCommentClick() {
+    if (onCommentClick) {
+      onCommentClick()
       return
     }
 
-    updateCommentsQuery(null, true)
+    handleCommentsOpenChange(true)
   }
 
   return (
@@ -92,17 +61,19 @@ export function GroupPostCard({
           <GroupPostSummary
             post={post}
             timeVariant={timeVariant}
-            onCommentClick={() => handleCommentsOpenChange(true)}
+            onCommentClick={handleCommentClick}
           />
         </div>
       </article>
 
-      <GroupPostCommentsDrawer
-        open={isCommentsOpen}
-        onOpenChange={handleCommentsOpenChange}
-        commentItems={commentItems}
-        postAuthorId={post.author_id}
-      />
+      {!isCommentsControlled ? (
+        <GroupPostCommentsDrawer
+          open={isCommentsOpen}
+          onOpenChange={handleCommentsOpenChange}
+          commentItems={commentItems}
+          postAuthorId={post.author_id}
+        />
+      ) : null}
     </>
   )
 }

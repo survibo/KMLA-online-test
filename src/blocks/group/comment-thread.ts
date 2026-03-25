@@ -83,25 +83,6 @@ function createCommentMeta(
   }
 }
 
-function getTopLevelParentId(
-  comment: GroupComment,
-  commentMap: Map<string, GroupComment>
-) {
-  let currentParentId = comment.parent_id ?? null
-
-  while (currentParentId) {
-    const parentComment = commentMap.get(currentParentId)
-
-    if (!parentComment?.parent_id) {
-      return parentComment?.id ?? currentParentId
-    }
-
-    currentParentId = parentComment.parent_id
-  }
-
-  return null
-}
-
 export function createGroupCardCommentThread(commentItems: GroupComment[]) {
   const lookup = createGroupCommentLookup(commentItems)
   const rootComments = lookup.sortedComments.filter((item) => item.parent_id === null)
@@ -123,31 +104,4 @@ export function createGroupCardCommentThread(commentItems: GroupComment[]) {
     topLevelComments,
     directRepliesByParentId,
   }
-}
-
-export function createGroupDetailCommentThread(commentItems: GroupComment[]) {
-  const lookup = createGroupCommentLookup(commentItems)
-  const childMap = new Map<string | null, GroupComment[]>()
-
-  for (const comment of lookup.sortedComments) {
-    const parentKey = getTopLevelParentId(comment, lookup.commentMap)
-    const siblings = childMap.get(parentKey) ?? []
-    siblings.push(comment)
-    childMap.set(parentKey, siblings)
-  }
-
-  const flattenedComments: GroupCommentMeta[] = []
-
-  function walkComments(parentId: string | null, actualDepth: number) {
-    const children = childMap.get(parentId) ?? []
-
-    for (const child of children) {
-      flattenedComments.push(createCommentMeta(child, Math.min(actualDepth, 1), lookup))
-      walkComments(child.id, actualDepth + 1)
-    }
-  }
-
-  walkComments(null, 0)
-
-  return flattenedComments
 }

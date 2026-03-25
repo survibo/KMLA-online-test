@@ -1,6 +1,8 @@
 import { ArrowLeft, ChevronDown, Plus, Search } from "lucide-react"
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 
 import { GroupPostCard } from "@/blocks/group/post-card"
+import { GroupPostCommentsDrawer } from "@/blocks/group/post-card/comments-drawer"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -18,6 +20,9 @@ type GroupPostListProps = {
 }
 
 export function GroupPostList({ group, className }: GroupPostListProps) {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const hasModes = Boolean(group.modes?.length && group.activeModeId)
   const posts = hasModes
     ? group.posts.filter(
@@ -26,6 +31,63 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
           group.activeModeId
       )
     : group.posts
+  const openCommentsPostId = searchParams.get("comments")
+  const activeCommentsPost =
+    posts.find((post) => post.id === openCommentsPostId) ??
+    group.posts.find((post) => post.id === openCommentsPostId) ??
+    null
+
+  function updateCommentsQuery(nextPostId: string | null, replace = false) {
+    const nextSearchParams = new URLSearchParams(searchParams)
+
+    if (nextPostId) {
+      nextSearchParams.set("comments", nextPostId)
+    } else {
+      nextSearchParams.delete("comments")
+    }
+
+    const nextSearch = nextSearchParams.toString()
+
+    navigate(
+      {
+        pathname: location.pathname,
+        search: nextSearch ? `?${nextSearch}` : "",
+      },
+      {
+        replace,
+        state: nextPostId
+          ? {
+              ...location.state,
+              commentsDrawerSourcePath: `${location.pathname}${location.search}`,
+              commentsDrawerPostId: nextPostId,
+            }
+          : location.state,
+      }
+    )
+  }
+
+  function handleCommentsOpen(postId: string) {
+    if (openCommentsPostId === postId) return
+
+    updateCommentsQuery(postId)
+  }
+
+  function handleCommentsOpenChange(nextOpen: boolean) {
+    if (nextOpen || !openCommentsPostId) return
+
+    const sourcePath =
+      typeof location.state?.commentsDrawerSourcePath === "string"
+        ? location.state.commentsDrawerSourcePath
+        : null
+    const currentPath = `${location.pathname}${location.search}`
+
+    if (sourcePath && sourcePath !== currentPath) {
+      navigate(-1)
+      return
+    }
+
+    updateCommentsQuery(null, true)
+  }
 
   return (
     <section className={cn("min-h-screen bg-background text-foreground", className)}>
@@ -112,6 +174,7 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
             key={post.id}
             post={post}
             timeVariant="relative"
+            onCommentClick={() => handleCommentsOpen(post.id)}
           />
         ))}
       </div>
@@ -126,6 +189,13 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
           <Plus className="size-7" strokeWidth={2.2} />
         </Button>
       </div>
+
+      <GroupPostCommentsDrawer
+        open={Boolean(activeCommentsPost)}
+        onOpenChange={handleCommentsOpenChange}
+        commentItems={activeCommentsPost?.post_comments ?? []}
+        postAuthorId={activeCommentsPost?.author_id}
+      />
     </section>
   )
 }

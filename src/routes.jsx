@@ -2,6 +2,7 @@ import { createBrowserRouter, Link, Navigate, Outlet, RouterProvider } from "rea
 
 import { FontScaleControl } from "@/components/font-scale-control"
 import { Example } from "./Example"
+import { PhotoViewer } from "./PhotoViewer"
 import {
   ScenarioBlockPreview,
   ScenarioDomainPreview,
@@ -78,6 +79,10 @@ const router = createBrowserRouter([
       {
         path: "example",
         element: <Example />,
+      },
+      {
+        path: "photo",
+        element: <PhotoViewer />,
       },
       {
         path: "scenarios",
