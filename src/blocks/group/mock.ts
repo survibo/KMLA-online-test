@@ -8,6 +8,7 @@ import type {
   GroupRecord,
   GroupUser,
 } from "./types"
+import { compareIsoAsc, compareIsoDesc } from "@/lib/datetime"
 
 export type GroupPostMockData = {
   users: GroupUser[]
@@ -391,19 +392,13 @@ export function getGroupPostComments(
 ): GroupComment[] {
   return data.post_comments
     .filter((comment) => comment.post_id === postId && !comment.deleted_at)
-    .sort(
-      (a, b) =>
-        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-    )
+    .sort((a, b) => compareIsoAsc(a.created_at, b.created_at))
     .map((comment) => ({
       ...comment,
       author: findUser(data.users, comment.author_id),
       comment_reactions: data.comment_reactions
         .filter((reaction) => reaction.comment_id === comment.id)
-        .sort(
-          (a, b) =>
-            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        )
+        .sort((a, b) => compareIsoAsc(a.created_at, b.created_at))
         .map(cloneReaction),
     }))
 }
@@ -428,9 +423,7 @@ export function getGroupPostById(
     post_comments: getGroupPostComments(post.id, data),
     post_reactions: data.post_reactions
       .filter((reaction) => reaction.post_id === post.id)
-      .sort(
-        (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-      )
+      .sort((a, b) => compareIsoAsc(a.created_at, b.created_at))
       .map(cloneReaction),
   }
 }
@@ -442,9 +435,7 @@ export function getGroupPostListGroupById(
   const group = findGroup(data.groups, groupId)
   const posts = data.posts
     .filter((post) => post.group_id === groupId && !post.deleted_at)
-    .sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    )
+    .sort((a, b) => compareIsoDesc(a.created_at, b.created_at))
     .map((post) => getGroupPostById(post.id, data))
 
   return {

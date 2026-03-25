@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import {
   formatIsoMeridiemTime,
   formatIsoMonthDayMeridiemTime,
+  getIsoTimestamp,
+  isSameIsoDay,
 } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
 
@@ -23,7 +25,7 @@ const SCROLL_TO_BOTTOM_THRESHOLD = 160
 function getIsoTime(isoString: string | undefined) {
   if (!isoString) return null
 
-  return new Date(isoString).getTime()
+  return getIsoTimestamp(isoString)
 }
 
 function hasLongGap(previousTime: number | null, currentTime: number | null) {
@@ -42,16 +44,7 @@ function isSameCalendarDay(
   previousCreatedAt: string | undefined,
   currentCreatedAt: string
 ) {
-  if (!previousCreatedAt) return false
-
-  const previousDate = new Date(previousCreatedAt)
-  const currentDate = new Date(currentCreatedAt)
-
-  return (
-    previousDate.getFullYear() === currentDate.getFullYear() &&
-    previousDate.getMonth() === currentDate.getMonth() &&
-    previousDate.getDate() === currentDate.getDate()
-  )
+  return isSameIsoDay(previousCreatedAt, currentCreatedAt)
 }
 
 function createMessageLayout(

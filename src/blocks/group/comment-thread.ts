@@ -1,4 +1,5 @@
 import type { GroupComment } from "@/blocks/group/types"
+import { compareIsoAsc } from "@/lib/datetime"
 
 export type GroupCommentMeta = {
   item: GroupComment
@@ -15,10 +16,7 @@ type GroupCommentLookup = {
 }
 
 function sortCommentsByCreatedAt(commentItems: GroupComment[]) {
-  return [...commentItems].sort(
-    (a, b) =>
-      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-  )
+  return [...commentItems].sort((a, b) => compareIsoAsc(a.created_at, b.created_at))
 }
 
 function getParentAuthorName(

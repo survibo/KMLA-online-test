@@ -7,6 +7,7 @@ import type {
   ChatRoomRecord,
   ChatUser,
 } from "./types"
+import { compareIsoAsc, isIsoAfterDate } from "@/lib/datetime"
 
 export type ChatMockData = {
   current_user_id: string
@@ -241,10 +242,7 @@ export function getChatRoomMessages(roomId: string, data: ChatMockData) {
       message_reactions: [],
       message_reads: [],
     }))
-    .sort(
-      (a, b) =>
-        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-    )
+    .sort((a, b) => compareIsoAsc(a.created_at, b.created_at))
 }
 
 export function getLatestChatRoomMessage(roomId: string, data: ChatMockData) {
@@ -270,10 +268,7 @@ export function getChatRoomUnreadState(
     if (message.sender_id === currentUserId) return false
 
     if (currentMember.last_read_at) {
-      return (
-        new Date(message.created_at).getTime() >
-        new Date(currentMember.last_read_at).getTime()
-      )
+      return isIsoAfterDate(message.created_at, currentMember.last_read_at)
     }
 
     if (currentMember.last_read_message_id) {

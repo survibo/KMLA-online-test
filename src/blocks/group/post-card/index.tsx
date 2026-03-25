@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 
 import { cn } from "@/lib/utils"
 import type { GroupPost } from "@/blocks/group/types"
@@ -19,8 +19,66 @@ export function GroupPostCard({
   timeVariant = "absolute",
   className,
 }: GroupPostCardProps) {
-  const [isCommentsOpen, setIsCommentsOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const commentItems = post.post_comments ?? []
+  const openCommentsPostId = searchParams.get("comments")
+  const isCommentsOpen = openCommentsPostId === post.id
+
+  function updateCommentsQuery(nextPostId: string | null, replace = false) {
+    const nextSearchParams = new URLSearchParams(searchParams)
+
+    if (nextPostId) {
+      nextSearchParams.set("comments", nextPostId)
+    } else {
+      nextSearchParams.delete("comments")
+    }
+
+    const nextSearch = nextSearchParams.toString()
+
+    navigate(
+      {
+        pathname: location.pathname,
+        search: nextSearch ? `?${nextSearch}` : "",
+      },
+      {
+        replace,
+        state: nextPostId
+          ? {
+              ...location.state,
+              commentsDrawerSourcePath: `${location.pathname}${location.search}`,
+              commentsDrawerPostId: nextPostId,
+            }
+          : location.state,
+      }
+    )
+  }
+
+  function handleCommentsOpenChange(nextOpen: boolean) {
+    if (nextOpen) {
+      if (!isCommentsOpen) {
+        updateCommentsQuery(post.id)
+      }
+
+      return
+    }
+
+    if (!isCommentsOpen) return
+
+    const sourcePath =
+      typeof location.state?.commentsDrawerSourcePath === "string"
+        ? location.state.commentsDrawerSourcePath
+        : null
+    const currentPath = `${location.pathname}${location.search}`
+
+    if (sourcePath && sourcePath !== currentPath) {
+      navigate(-1)
+      return
+    }
+
+    updateCommentsQuery(null, true)
+  }
 
   return (
     <>
@@ -34,14 +92,14 @@ export function GroupPostCard({
           <GroupPostSummary
             post={post}
             timeVariant={timeVariant}
-            onCommentClick={() => setIsCommentsOpen(true)}
+            onCommentClick={() => handleCommentsOpenChange(true)}
           />
         </div>
       </article>
 
       <GroupPostCommentsDrawer
         open={isCommentsOpen}
-        onOpenChange={setIsCommentsOpen}
+        onOpenChange={handleCommentsOpenChange}
         commentItems={commentItems}
         postAuthorId={post.author_id}
       />

@@ -5,6 +5,7 @@ import {
   type ChatMockData,
 } from "@/blocks/chat/mock"
 import { createChatRoomCardRoomFromMockData } from "@/blocks/chat/room-card/mock"
+import { compareIsoDesc } from "@/lib/datetime"
 
 import type { ChatRoomListData } from "./types"
 
@@ -21,7 +22,7 @@ export function createChatRoomListDataFromMockData(
       const aCreatedAt = a.preview_message?.created_at ?? a.created_at
       const bCreatedAt = b.preview_message?.created_at ?? b.created_at
 
-      return new Date(bCreatedAt).getTime() - new Date(aCreatedAt).getTime()
+      return compareIsoDesc(aCreatedAt, bCreatedAt)
     })
 
   return {
