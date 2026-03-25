@@ -47,7 +47,7 @@
 mock을 바꿔가며 실험할 때는 아래 순서를 권장한다.
 
 1. `mock.ts`는 도메인 raw mock에서 목록용 group/post projection만 계산한다.
-2. 목록 길이나 밀도, 모드 버튼 유무 실험은 `mock.scenarios.ts`에서 raw override 후 projection을 다시 계산한다.
+2. 목록 길이, 모드 버튼 유무, preview route 기반 로딩 확인 같은 실험은 `mock.scenarios.ts`에서 scenario로 분리해 관리한다.
 3. 카드 구조가 바뀌더라도 목록 mock은 복제가 아니라 같은 raw post를 읽도록 유지한다.
 4. preview에서 볼 케이스는 `active...Scenario` 하나만 고르면 되게 유지한다.
 

@@ -2,7 +2,6 @@ import {
   baseGroupPostFourthPostId,
   baseGroupPostLatestPostId,
   baseGroupPostListGroupId,
-  baseGroupPostMockData,
   baseGroupPostSecondPostId,
   baseGroupPostThirdPostId,
 } from "@/blocks/group/mock"
@@ -28,18 +27,11 @@ export const groupPostListDefaultScenario: GroupPostListScenario = {
   group: createGroupPostListGroup(),
 }
 
-export const groupPostListSparseScenario: GroupPostListScenario = {
-  id: "sparse",
-  label: "게시글 적음",
-  description: "게시글 수가 적은 목록 밀도를 확인하는 상태",
-  group: createGroupPostListGroup(baseGroupPostListGroupId, {
-    posts: baseGroupPostMockData.posts.filter(
-      (post) =>
-        post.group_id !== baseGroupPostListGroupId ||
-        post.id === baseGroupPostLatestPostId ||
-        post.id === baseGroupPostSecondPostId
-    ),
-  }),
+export const groupPostListLoadingBarScenario: GroupPostListScenario = {
+  id: "loading-bar",
+  label: "로딩바 확인",
+  description: "이 시나리오로 진입할 때 preview route loader를 잠깐 지연시켜 상단 로딩바를 확인하는 상태",
+  group: createGroupPostListGroup(),
 }
 
 export const groupPostListModeSellScenario: GroupPostListScenario = {
@@ -84,11 +76,12 @@ export const groupPostListModeBuyScenario: GroupPostListScenario = {
 
 export const groupPostListScenarios: GroupPostListScenario[] = [
   groupPostListDefaultScenario,
+  groupPostListLoadingBarScenario,
   groupPostListModeSellScenario,
   groupPostListModeBuyScenario,
 ]
 
-export const activeGroupPostListScenarioIndex = 0 // 0 ~ 2, total 3 scenarios
+export const activeGroupPostListScenarioIndex = 0 // 0 ~ 3, total 4 scenarios
 
 export const activeGroupPostListScenario =
   groupPostListScenarios[activeGroupPostListScenarioIndex]

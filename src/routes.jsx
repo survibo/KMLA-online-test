@@ -10,6 +10,25 @@ import {
   ScenarioPreviewIndex,
 } from "./ScenarioPreview"
 
+async function scenarioBlockPreviewLoader({ params, request }) {
+  const requestUrl = new URL(request.url)
+  const scenarioIndex = requestUrl.searchParams.get("scenario")
+  const shouldDelayForLoadingBar =
+    params.domainId === "group" &&
+    params.blockId === "post-list" &&
+    scenarioIndex === "1"
+
+  if (shouldDelayForLoadingBar) {
+    const delayMs = 500 + Math.floor(Math.random() * 1001)
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, delayMs)
+    })
+  }
+
+  return null
+}
+
 function AppLayout() {
   return (
     <>
@@ -96,6 +115,7 @@ const router = createBrowserRouter([
       },
       {
         path: "scenarios/:domainId/:blockId",
+        loader: scenarioBlockPreviewLoader,
         element: <ScenarioBlockPreview />,
       },
       {
