@@ -156,9 +156,9 @@ raw mock data → block mock projection → mock scenario
 
 각 단계:
 
-- **raw mock data**: 실제 스키마/API 응답에 최대한 가까운 원재료
-- **block mock projection**: raw mock을 block props에 맞게 가공한 값
-- **mock scenario**: raw mock 일부를 바꾸고 projection을 재계산한 완성 케이스
+- raw mock data: 실제 스키마/API 응답에 최대한 가까운 원재료
+- block mock projection: raw mock을 block props에 맞게 가공한 값
+- mock scenario: raw mock 일부를 바꾸고 projection을 재계산한 완성 케이스
 
 도메인 단위 mock 구조:
 
