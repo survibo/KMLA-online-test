@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react"
-import { MessageCircle, ThumbsUp } from "lucide-react"
+import { MessageCircle, SendHorizontal, ThumbsUp } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -213,7 +213,7 @@ export function GroupCommentComposer({
   return (
     <div
       ref={composerRef}
-      className={cn("flex flex-col gap-3", className)}
+      className={cn(className)}
       onFocusCapture={() => setIsComposerActive(true)}
       onBlurCapture={(event) => {
         const nextFocusedElement = event.relatedTarget as Node | null
@@ -227,21 +227,25 @@ export function GroupCommentComposer({
         }
       }}
     >
-      <Textarea
-        placeholder="이 게시글에 댓글 남기기"
-        value={draftComment}
-        onChange={(event) => setDraftComment(event.target.value)}
-        className="min-h-10 rounded-2xl border-border bg-muted px-4 py-3 text-sm text-text-strong shadow-none placeholder:text-text-faint focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
-      />
-      <div className="flex min-h-9 justify-end">
-        {shouldShowSubmitButton ? (
-          <Button
-            type="button"
-            className="rounded-full bg-emerald-500 px-4 text-white shadow-none hover:bg-emerald-600 dark:bg-emerald-500 dark:text-white dark:hover:bg-emerald-400"
-          >
-            댓글 작성
-          </Button>
-        ) : null}
+      <div className="rounded-[1.5rem] border border-border bg-muted px-4 py-2.5 shadow-none">
+        <Textarea
+          placeholder="댓글을 입력하세요..."
+          value={draftComment}
+          onChange={(event) => setDraftComment(event.target.value)}
+          className="min-h-[2.25rem] resize-none border-0 bg-transparent px-0 py-0 text-sm text-text-strong shadow-none placeholder:text-text-faint focus-visible:ring-0"
+        />
+        <div className="mt-1.5 flex min-h-8 items-center justify-end">
+          {shouldShowSubmitButton ? (
+            <Button
+              type="button"
+              size="icon"
+              className="size-8 rounded-full bg-emerald-500 text-white shadow-none hover:bg-emerald-600 dark:bg-emerald-500 dark:text-white dark:hover:bg-emerald-400"
+              aria-label="댓글 전송"
+            >
+              <SendHorizontal className="size-4.5" strokeWidth={2.2} />
+            </Button>
+          ) : null}
+        </div>
       </div>
     </div>
   )
