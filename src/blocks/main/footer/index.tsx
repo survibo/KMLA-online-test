@@ -36,7 +36,7 @@ export function MainFooter({ data, className }: MainFooterProps) {
         <div>
           <nav
             aria-label="Main footer navigation"
-            className="h-20 w-full rounded-t-[1.5rem] bg-card px-4 py-3 text-card-foreground shadow-[0_-10px_28px_rgba(15,23,42,0.10)] ring-1 ring-border/80 dark:shadow-[0_-10px_28px_rgba(0,0,0,0.35)]"
+            className="h-17 w-full rounded-t-[1.5rem] bg-card px-4 py-3 text-card-foreground shadow-[0_-10px_28px_rgba(15,23,42,0.10)] ring-1 ring-border/80 dark:shadow-[0_-10px_28px_rgba(0,0,0,0.35)]"
           >
             <ul className="grid h-full grid-cols-5 items-center gap-1">
               {data.tabs.map((tab) => (
