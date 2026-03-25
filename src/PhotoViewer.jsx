@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, X } from "lucide-react"
+import { ChevronLeft, ChevronRight, Download, X } from "lucide-react"
 import { Navigate, useLocation, useNavigate, useSearchParams } from "react-router-dom"
 
 import { getGroupPostImageViewerData } from "@/blocks/group/mock"
@@ -10,6 +10,16 @@ function buildPhotoSearch(searchParams, imageId) {
   nextSearchParams.set("image", imageId)
 
   return `?${nextSearchParams.toString()}`
+}
+
+function buildDownloadFileName(postTitle, imageId) {
+  const normalizedTitle = (postTitle ?? "group-post-image")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+
+  return `${normalizedTitle || "group-post-image"}-${imageId}.jpg`
 }
 
 export function PhotoViewer() {
@@ -35,8 +45,14 @@ export function PhotoViewer() {
   const nextImage = images[activeImageIndex + 1] ?? images[0] ?? null
   const fromPath =
     typeof location.state?.fromPath === "string" ? location.state.fromPath : null
+  const downloadFileName = buildDownloadFileName(post.title, activeImage.id)
 
   function handleClose() {
+    if (fromPath && window.history.length > 1) {
+      navigate(-1)
+      return
+    }
+
     navigate(fromPath ?? "/", { replace: true })
   }
 
@@ -68,16 +84,35 @@ export function PhotoViewer() {
             </p>
           </div>
 
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="size-10 rounded-full bg-white/10 text-white"
-            onClick={handleClose}
-            aria-label="이미지 닫기"
-          >
-            <X className="size-5" strokeWidth={2.2} />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="size-10 rounded-full bg-white/10 text-white"
+              asChild
+            >
+              <a
+                href={activeImage.url}
+                download={downloadFileName}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="이미지 다운로드"
+              >
+                <Download className="size-5" strokeWidth={2.2} />
+              </a>
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="size-10 rounded-full bg-white/10 text-white"
+              onClick={handleClose}
+              aria-label="이미지 닫기"
+            >
+              <X className="size-5" strokeWidth={2.2} />
+            </Button>
+          </div>
         </header>
 
         <div className="flex min-h-screen items-center justify-center px-3 py-16 sm:px-6 sm:py-20">
