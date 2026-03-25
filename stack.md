@@ -10,3 +10,4 @@ Uppy
 TanStack Query
 =================
 Zustand
+Cloudflare R2

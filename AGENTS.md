@@ -34,7 +34,7 @@
 
 규칙 충돌 시 우선순위:
 
-1. `scheme.md`
+1. `SCHEME.md`
 2. 이 문서
 3. 도메인 문서
 4. 각 block의 `README.md`
@@ -56,7 +56,7 @@
 - 도메인 내부 block 전용: `src/blocks/<domain>/<block-name>/README.md`
 - 여러 block이 공유하는 도메인 규칙: 루트의 별도 md 파일
 - 전체 프로젝트 공통 규칙: `AGENTS.md`
-- 데이터 구조 기준: `scheme.md`
+- 데이터 구조 기준: `SCHEME.md`
 
 판단:
 
@@ -112,7 +112,7 @@ Windows 환경에서 한글 파일을 다룰 때, 터미널 출력 깨짐과 실
 
 ## Schema First
 
-데이터 shape는 `scheme.md`를 우선 기준으로 삼는다.
+데이터 shape는 `SCHEME.md`를 우선 기준으로 삼는다.
 
 반드시 지킬 것:
 
@@ -120,7 +120,7 @@ Windows 환경에서 한글 파일을 다룰 때, 터미널 출력 깨짐과 실
 - 시간 필드는 `created_at`, `updated_at`, `deleted_at` 형태를 유지한다.
 - 스키마의 캐시 컬럼은 프론트에서도 그 의미를 존중한다.
 - 화면 전용 계산값은 raw data와 분리해서 다룬다.
-- `dbdiagram`으로 표현하기 어려운 제약은 `scheme.md`의 `Note`에 남기고, 구현 단계에서 보완한다.
+- `dbdiagram`으로 표현하기 어려운 제약은 `SCHEME.md`의 `Note`에 남기고, 구현 단계에서 보완한다.
 
 ## TypeScript Rule
 
@@ -346,7 +346,7 @@ block 변경은 `index.tsx`만 수정하고 끝내지 않는다.
 
 ## When Updating Schema
 
-`scheme.md`가 바뀌면 함께 점검:
+`SCHEME.md`가 바뀌면 함께 점검:
 
 1. 공통 타입
 2. block 타입
@@ -366,7 +366,7 @@ block 변경은 `index.tsx`만 수정하고 끝내지 않는다.
 ## Fast Checklist
 
 - 코드와 문서를 먼저 읽었는가
-- `scheme.md` 기준과 어긋나지 않는가
+- `SCHEME.md` 기준과 어긋나지 않는가
 - 공통 조각으로 해결 가능한 부분을 먼저 봤는가
 - block을 건드렸다면 `types.ts`, `mock.ts`, `mock.scenarios.ts`, `README.md`까지 확인했는가
 - 시나리오를 바꿨다면 `src/ScenarioPreview.jsx`와 `src/Example.jsx`도 확인했는가
