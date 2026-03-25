@@ -11,17 +11,6 @@ function buildPhotoSearch(searchParams, imageId) {
 
   return `?${nextSearchParams.toString()}`
 }
-
-function buildDownloadFileName(postTitle, imageId) {
-  const normalizedTitle = (postTitle ?? "group-post-image")
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-
-  return `${normalizedTitle || "group-post-image"}-${imageId}.jpg`
-}
-
 export function PhotoViewer() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -45,7 +34,6 @@ export function PhotoViewer() {
   const nextImage = images[activeImageIndex + 1] ?? images[0] ?? null
   const fromPath =
     typeof location.state?.fromPath === "string" ? location.state.fromPath : null
-  const downloadFileName = buildDownloadFileName(post.title, activeImage.id)
 
   function handleClose() {
     if (fromPath && window.history.length > 1) {
@@ -90,17 +78,9 @@ export function PhotoViewer() {
               variant="ghost"
               size="icon"
               className="size-10 rounded-full bg-white/10 text-white"
-              asChild
+              aria-label="이미지 다운로드"
             >
-              <a
-                href={activeImage.url}
-                download={downloadFileName}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="이미지 다운로드"
-              >
-                <Download className="size-5" strokeWidth={2.2} />
-              </a>
+              <Download className="size-5" strokeWidth={2.2} />
             </Button>
             <Button
               type="button"

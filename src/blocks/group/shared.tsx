@@ -132,7 +132,7 @@ export const GroupPostOverflowMenuDrawer = memo(function GroupPostOverflowMenuDr
 }) {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="mx-auto w-full max-w-[32rem] rounded-t-[1.5rem] bg-background data-[vaul-drawer-direction=bottom]:h-auto data-[vaul-drawer-direction=bottom]:max-h-[80vh]">
+      <DrawerContent className="mx-auto w-full rounded-t-[1.5rem] bg-background data-[vaul-drawer-direction=bottom]:h-auto data-[vaul-drawer-direction=bottom]:max-h-[80vh]">
         <DrawerHeader className="px-4 pb-2 pt-5 text-left sm:px-5">
           <DrawerTitle className="text-base font-semibold text-text-strong">
             게시글 메뉴
