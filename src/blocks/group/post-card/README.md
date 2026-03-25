@@ -43,6 +43,7 @@
 - 최상위 댓글의 댓글 아이콘을 누르면 해당 답글 묶음은 자동으로 펼친다.
 - 댓글 row, 답글 접기/펼치기 thread, composer는 detail 화면과 공용 댓글 조각을 공유한다.
 - 목록 화면에서는 상위 block이 `comments=<postId>` query param을 관리하고, 카드 block은 댓글 drawer를 여는 트리거 역할에 집중한다.
+- 목록 화면에서 상위 block이 menu drawer를 단일 인스턴스로 관리할 때, 카드 block은 `...` 버튼 트리거 역할만 넘겨받아 사용한다.
 - 모바일에서 댓글 입력을 시작해도 목록이 갑자기 잘리지 않도록 composer 높이 변화는 최대한 완만하게 유지한다.
 - 댓글 drawer의 surface, 입력창, 액션 버튼은 라이트/다크 모드 모두에서 대비가 유지되도록 block-local 색 규칙을 둔다.
 - 카드 전용 댓글 drawer UI

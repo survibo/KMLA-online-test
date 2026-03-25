@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react"
+import { memo, useState, type ReactNode } from "react"
 import {
   EllipsisVertical,
   MessageCircle,
@@ -34,7 +34,7 @@ export function getGroupInitials(name: string) {
     .join("")
 }
 
-export function GroupPostAvatar({
+export const GroupPostAvatar = memo(function GroupPostAvatar({
   author,
   size = "lg",
   className,
@@ -55,9 +55,9 @@ export function GroupPostAvatar({
       </AvatarFallback>
     </Avatar>
   )
-}
+})
 
-export function GroupPostHeader({
+export const GroupPostHeader = memo(function GroupPostHeader({
   author,
   createdAt,
   timeVariant = "absolute",
@@ -99,9 +99,9 @@ export function GroupPostHeader({
       {trailing ? <div className="shrink-0">{trailing}</div> : null}
     </div>
   )
-}
+})
 
-export function GroupPostOverflowMenuButton({
+export const GroupPostOverflowMenuButton = memo(function GroupPostOverflowMenuButton({
   onClick,
 }: {
   onClick?: () => void
@@ -121,9 +121,9 @@ export function GroupPostOverflowMenuButton({
       <EllipsisVertical className="size-5" />
     </Button>
   )
-}
+})
 
-export function GroupPostOverflowMenuDrawer({
+export const GroupPostOverflowMenuDrawer = memo(function GroupPostOverflowMenuDrawer({
   open,
   onOpenChange,
 }: {
@@ -173,7 +173,7 @@ export function GroupPostOverflowMenuDrawer({
       </DrawerContent>
     </Drawer>
   )
-}
+})
 
 export function GroupPostOverflowMenu() {
   const [open, setOpen] = useState(false)
@@ -186,7 +186,7 @@ export function GroupPostOverflowMenu() {
   )
 }
 
-export function GroupPostContent({
+export const GroupPostContent = memo(function GroupPostContent({
   post,
   className,
 }: {
@@ -211,7 +211,7 @@ export function GroupPostContent({
       />
     </div>
   )
-}
+})
 
 function GroupPostBodyText({
   content,
@@ -221,7 +221,7 @@ function GroupPostBodyText({
   return <p className="whitespace-pre-line break-keep text-text-soft">{content}</p>
 }
 
-export function GroupPostGallery({
+export const GroupPostGallery = memo(function GroupPostGallery({
   images = [],
   altFallback = "Post attachment preview",
 }: {
@@ -272,9 +272,9 @@ export function GroupPostGallery({
       ) : null}
     </button>
   )
-}
+})
 
-export function GroupPostStats({
+export const GroupPostStats = memo(function GroupPostStats({
   post,
   onCommentClick,
 }: {
@@ -322,9 +322,9 @@ export function GroupPostStats({
       </Button>
     </div>
   )
-}
+})
 
-export function GroupPostSummary({
+export const GroupPostSummary = memo(function GroupPostSummary({
   post,
   timeVariant = "absolute",
   onAvatarClick,
@@ -356,4 +356,4 @@ export function GroupPostSummary({
       </div>
     </div>
   )
-}
+})

@@ -1,3 +1,5 @@
+import { memo } from "react"
+
 import {
   Drawer,
   DrawerContent,
@@ -20,7 +22,7 @@ type GroupPostCommentsDrawerProps = {
   postAuthorId?: string
 }
 
-export function GroupPostCommentsDrawer({
+export const GroupPostCommentsDrawer = memo(function GroupPostCommentsDrawer({
   open,
   onOpenChange,
   commentItems = [],
@@ -57,4 +59,4 @@ export function GroupPostCommentsDrawer({
       </DrawerContent>
     </Drawer>
   )
-}
+})

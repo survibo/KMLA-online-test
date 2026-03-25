@@ -1,8 +1,9 @@
-import { useState, type ReactNode } from "react"
+import { memo, useState } from "react"
 
 import { cn } from "@/lib/utils"
 import type { GroupPost } from "@/blocks/group/types"
 import {
+  GroupPostOverflowMenuButton,
   GroupPostSummary,
 } from "@/blocks/group/shared"
 
@@ -12,17 +13,17 @@ type GroupPostCardProps = {
   post: GroupPost
   timeVariant?: "absolute" | "relative"
   className?: string
-  trailing?: ReactNode
+  onOverflowMenuClick?: () => void
   commentsOpen?: boolean
   onCommentClick?: () => void
   onCommentsOpenChange?: (open: boolean) => void
 }
 
-export function GroupPostCard({
+function GroupPostCardComponent({
   post,
   timeVariant = "absolute",
   className,
-  trailing,
+  onOverflowMenuClick,
   commentsOpen,
   onCommentClick,
   onCommentsOpenChange,
@@ -63,7 +64,11 @@ export function GroupPostCard({
           <GroupPostSummary
             post={post}
             timeVariant={timeVariant}
-            trailing={trailing}
+            trailing={
+              onOverflowMenuClick ? (
+                <GroupPostOverflowMenuButton onClick={onOverflowMenuClick} />
+              ) : undefined
+            }
             onCommentClick={handleCommentClick}
           />
         </div>
@@ -80,3 +85,12 @@ export function GroupPostCard({
     </>
   )
 }
+
+export const GroupPostCard = memo(
+  GroupPostCardComponent,
+  (prevProps, nextProps) =>
+    prevProps.post === nextProps.post &&
+    prevProps.timeVariant === nextProps.timeVariant &&
+    prevProps.className === nextProps.className &&
+    prevProps.commentsOpen === nextProps.commentsOpen
+)

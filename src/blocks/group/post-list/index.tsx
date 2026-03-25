@@ -1,10 +1,10 @@
+import { memo, useMemo } from "react"
 import { ArrowLeft, ChevronDown, Plus, Search } from "lucide-react"
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 
 import { GroupPostCard } from "@/blocks/group/post-card"
 import { GroupPostCommentsDrawer } from "@/blocks/group/post-card/comments-drawer"
 import {
-  GroupPostOverflowMenuButton,
   GroupPostOverflowMenuDrawer,
 } from "@/blocks/group/shared"
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
+import type { GroupPost } from "@/blocks/group/types"
 import type { GroupPostListGroup } from "./types"
 
 type GroupPostListProps = {
@@ -28,13 +29,17 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const hasModes = Boolean(group.modes?.length && group.activeModeId)
-  const posts = hasModes
-    ? group.posts.filter(
-        (post) =>
-          (group.postModeById?.[post.id] ?? group.activeModeId) ===
-          group.activeModeId
-      )
-    : group.posts
+  const posts = useMemo(
+    () =>
+      hasModes
+        ? group.posts.filter(
+            (post) =>
+              (group.postModeById?.[post.id] ?? group.activeModeId) ===
+              group.activeModeId
+          )
+        : group.posts,
+    [group.activeModeId, group.postModeById, group.posts, hasModes]
+  )
   const openCommentsPostId = searchParams.get("comments")
   const activeCommentsPost =
     posts.find((post) => post.id === openCommentsPostId) ??
@@ -229,19 +234,11 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
         </div>
       </header>
 
-      <div>
-        {posts.map((post) => (
-          <GroupPostCard
-            key={post.id}
-            post={post}
-            timeVariant="relative"
-            onCommentClick={() => handleCommentsOpen(post.id)}
-            trailing={
-              <GroupPostOverflowMenuButton onClick={() => handleMenuOpen(post.id)} />
-            }
-          />
-        ))}
-      </div>
+      <GroupPostListCards
+        posts={posts}
+        onCommentOpen={handleCommentsOpen}
+        onMenuOpen={handleMenuOpen}
+      />
 
       <div className="sticky bottom-0 flex justify-end px-4 pb-10 pt-12 sm:px-6">
         <Button
@@ -268,3 +265,27 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
     </section>
   )
 }
+
+const GroupPostListCards = memo(function GroupPostListCards({
+  posts,
+  onCommentOpen,
+  onMenuOpen,
+}: {
+  posts: GroupPost[]
+  onCommentOpen: (postId: string) => void
+  onMenuOpen: (postId: string) => void
+}) {
+  return (
+    <div>
+      {posts.map((post) => (
+        <GroupPostCard
+          key={post.id}
+          post={post}
+          timeVariant="relative"
+          onCommentClick={() => onCommentOpen(post.id)}
+          onOverflowMenuClick={() => onMenuOpen(post.id)}
+        />
+      ))}
+    </div>
+  )
+})

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react"
+import { memo, useMemo, useRef, useState } from "react"
 import { MessageCircle, SendHorizontal, ThumbsUp } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -191,13 +191,13 @@ export function GroupCommentsThread({
   )
 }
 
-export function GroupCommentsEmptyState() {
+export const GroupCommentsEmptyState = memo(function GroupCommentsEmptyState() {
   return (
     <div className="px-4 py-6 text-center text-sm text-text-faint">
       아직 댓글이 없습니다. 첫 댓글을 남겨보세요.
     </div>
   )
-}
+})
 
 export function GroupCommentComposer({
   className,
