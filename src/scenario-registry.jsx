@@ -17,6 +17,8 @@ import { GroupPostList } from "@/blocks/group/post-list"
 import { groupPostListScenarios } from "@/blocks/group/post-list/mock.scenarios"
 import { MainFooter } from "@/blocks/main/footer"
 import { mainFooterScenarios } from "@/blocks/main/footer/mock.scenarios"
+import { MainHeader } from "@/blocks/main/header"
+import { mainHeaderScenarios } from "@/blocks/main/header/mock.scenarios"
 
 export const scenarioGroups = [
   {
@@ -88,6 +90,13 @@ export const scenarioGroups = [
     label: "Main Footer",
     scenarios: mainFooterScenarios,
     render: (scenario) => <MainFooter data={scenario.data} />,
+  },
+  {
+    domain: "main",
+    id: "header",
+    label: "Main Header",
+    scenarios: mainHeaderScenarios,
+    render: (scenario) => <MainHeader data={scenario.data} />,
   },
 ]
 

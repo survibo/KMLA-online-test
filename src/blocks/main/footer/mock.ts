@@ -3,7 +3,7 @@ import type { MainFooterData, MainFooterTab, MainFooterTabId } from "./types"
 export const baseMainFooterTabs: MainFooterTab[] = [
   { id: "home", label: "홈" },
   { id: "cube", label: "보관함" },
-  { id: "feed", label: "피드", hasIndicator: true },
+  { id: "group", label: "게시물", hasIndicator: true },
   { id: "chat", label: "채팅", badgeCount: 2 },
   { id: "profile", label: "프로필" },
 ]

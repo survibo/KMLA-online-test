@@ -60,7 +60,7 @@ function GroupCommentRow({
             type="button"
             variant="ghost"
             size="sm"
-            className="h-8 justify-start gap-1 px-1.5 py-0 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-600 dark:text-emerald-400 dark:hover:bg-emerald-400/12 dark:hover:text-emerald-300"
+            className="h-8 justify-start gap-1 px-1.5 py-0 text-brand-green-strong hover:bg-emerald-500/10 hover:text-emerald-600 dark:text-brand-green dark:hover:bg-emerald-400/12 dark:hover:text-emerald-300"
           >
             <ThumbsUp className="size-4" strokeWidth={2.2} />
             <span>{likes}</span>
@@ -239,7 +239,7 @@ export function GroupCommentComposer({
             <Button
               type="button"
               size="icon"
-              className="size-8 rounded-full bg-emerald-500 text-white shadow-none hover:bg-emerald-600 dark:bg-emerald-500 dark:text-white dark:hover:bg-emerald-400"
+              className="size-8 rounded-full bg-brand-green-strong text-brand-green-foreground shadow-none hover:bg-emerald-600 dark:bg-brand-green-strong dark:text-brand-green-foreground dark:hover:bg-emerald-400"
               aria-label="댓글 전송"
             >
               <SendHorizontal className="size-4.5" strokeWidth={2.2} />

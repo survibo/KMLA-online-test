@@ -293,7 +293,7 @@ export const GroupPostStats = memo(function GroupPostStats({
         type="button"
         variant="ghost"
         size="sm"
-        className="h-10 justify-start gap-1 px-2 py-0 text-[0.95rem] text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 [&_svg]:size-5.5"
+        className="h-10 justify-start gap-1 px-2 py-0 text-[0.95rem] text-brand-green-strong hover:bg-emerald-50 hover:text-emerald-600 [&_svg]:size-5.5"
       >
         <ThumbsUp className="size-5" strokeWidth={2.2} />
         <span className="font-medium">{likes}</span>

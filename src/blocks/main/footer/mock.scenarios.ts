@@ -22,8 +22,8 @@ export const mainFooterChatScenario: MainFooterScenario = {
   data: createMainFooterData({
     activeTabId: "chat",
     tabs: createMainFooterTabs("chat", {
-      chat: { badgeCount: 4 },
-      feed: { hasIndicator: true },
+      chat: { badgeCount: 132 },
+      group: { hasIndicator: false },
     }),
   }),
 }
@@ -36,7 +36,7 @@ export const mainFooterProfileScenario: MainFooterScenario = {
     activeTabId: "profile",
     tabs: createMainFooterTabs("profile", {
       chat: { badgeCount: 1 },
-      feed: { hasIndicator: false },
+      group: { hasIndicator: false },
     }),
   }),
 }

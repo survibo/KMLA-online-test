@@ -293,6 +293,8 @@ src/blocks/<domain>/
 
 - 공용 스타일 토큰은 도메인 폴더 내부 CSS 파일에 모은다.
 - block 본체에는 의미 있는 class명과 레이아웃 class만 남기고, 도메인 전용 표현은 도메인 CSS로 분리한다.
+- 기본 색상과 surface 스타일은 `src/index.css`에 정의된 전역 토큰(`background`, `foreground`, `card`, `text-*`, `border`, `primary` 등)을 우선 사용한다.
+- 다크 모드에서도 동일한 색상을 유지해야 하는 경우에만 예외적으로 하드코딩 색상을 사용한다.
 
 CSS로 분리하는 기준:
 

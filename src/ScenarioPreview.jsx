@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Check, ChevronDown, Settings2 } from "lucide-react"
 import { Link, Navigate, useParams, useSearchParams } from "react-router-dom"
 
@@ -20,8 +20,28 @@ import {
   scenarioDomains,
 } from "./scenario-registry"
 
-function getPreviewTheme(searchParams) {
-  return searchParams.get("theme") === "dark" ? "dark" : "light"
+const PREVIEW_THEME_STORAGE_KEY = "scenario-preview-theme"
+const PREVIEW_CONTROLS_POSITION_STORAGE_KEY = "scenario-preview-controls-position"
+
+function getStoredPreviewTheme() {
+  if (typeof window === "undefined") {
+    return "light"
+  }
+
+  return window.localStorage.getItem(PREVIEW_THEME_STORAGE_KEY) === "dark"
+    ? "dark"
+    : "light"
+}
+
+function getStoredPreviewControlsPosition() {
+  if (typeof window === "undefined") {
+    return "top"
+  }
+
+  return window.localStorage.getItem(PREVIEW_CONTROLS_POSITION_STORAGE_KEY) ===
+    "bottom"
+    ? "bottom"
+    : "top"
 }
 
 function createScenarioHref(pathname, searchParams, overrides = {}) {
@@ -41,11 +61,20 @@ function createScenarioHref(pathname, searchParams, overrides = {}) {
   return queryString ? `${pathname}?${queryString}` : pathname
 }
 
-function ScenarioPreviewControls({ theme, buildThemeHref }) {
+function ScenarioPreviewControls({
+  theme,
+  position,
+  setTheme,
+  setPosition,
+}) {
   const { fontScale, setFontScale } = useFontScaleControl()
 
   return (
-    <div className="fixed top-4 right-4 z-50 sm:top-6 sm:right-6">
+    <div
+      className={`fixed right-4 z-50 sm:right-6 ${
+        position === "bottom" ? "bottom-4 sm:bottom-6" : "top-4 sm:top-6"
+      }`}
+    >
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -62,15 +91,13 @@ function ScenarioPreviewControls({ theme, buildThemeHref }) {
         <DropdownMenuContent align="end" className="w-44 rounded-2xl">
           <DropdownMenuLabel>Theme</DropdownMenuLabel>
           {["light", "dark"].map((themeOption) => (
-            <DropdownMenuItem key={themeOption} asChild>
-              <Link
-                replace
-                to={buildThemeHref(themeOption)}
-                className="flex w-full items-center justify-between"
-              >
+            <DropdownMenuItem
+              key={themeOption}
+              onClick={() => setTheme(themeOption)}
+              className="flex items-center justify-between"
+            >
                 <span className="capitalize">{themeOption}</span>
                 {theme === themeOption ? <Check className="size-4" /> : null}
-              </Link>
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator />
@@ -83,6 +110,21 @@ function ScenarioPreviewControls({ theme, buildThemeHref }) {
             >
               <span>{option.label}</span>
               {fontScale === option.value ? <Check className="size-4" /> : null}
+            </DropdownMenuItem>
+          ))}
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel>Controls</DropdownMenuLabel>
+          {[
+            { id: "top", label: "위" },
+            { id: "bottom", label: "아래" },
+          ].map((option) => (
+            <DropdownMenuItem
+              key={option.id}
+              onClick={() => setPosition(option.id)}
+              className="flex items-center justify-between"
+            >
+                <span>{option.label}</span>
+                {position === option.id ? <Check className="size-4" /> : null}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
@@ -107,7 +149,9 @@ function ScenarioPreviewShell({
   title,
   description,
   theme,
-  buildThemeHref,
+  controlsPosition,
+  setTheme,
+  setControlsPosition,
   children,
 }) {
   useScenarioDocumentTheme(theme)
@@ -122,23 +166,56 @@ function ScenarioPreviewShell({
 
         <div className="mt-8">{children}</div>
       </div>
-      <ScenarioPreviewControls theme={theme} buildThemeHref={buildThemeHref} />
+      <ScenarioPreviewControls
+        theme={theme}
+        position={controlsPosition}
+        setTheme={setTheme}
+        setPosition={setControlsPosition}
+      />
     </main>
   )
 }
 
+function useScenarioPreviewPreferences() {
+  const [theme, setThemeState] = useState(getStoredPreviewTheme)
+  const [controlsPosition, setControlsPositionState] = useState(
+    getStoredPreviewControlsPosition
+  )
+
+  function setTheme(nextTheme) {
+    setThemeState(nextTheme)
+    window.localStorage.setItem(PREVIEW_THEME_STORAGE_KEY, nextTheme)
+  }
+
+  function setControlsPosition(nextPosition) {
+    setControlsPositionState(nextPosition)
+    window.localStorage.setItem(
+      PREVIEW_CONTROLS_POSITION_STORAGE_KEY,
+      nextPosition
+    )
+  }
+
+  return {
+    theme,
+    setTheme,
+    controlsPosition,
+    setControlsPosition,
+  }
+}
+
 export function ScenarioPreviewIndex() {
   const [searchParams] = useSearchParams()
-  const theme = getPreviewTheme(searchParams)
+  const { theme, setTheme, controlsPosition, setControlsPosition } =
+    useScenarioPreviewPreferences()
 
   return (
     <ScenarioPreviewShell
       title="Scenario Preview"
       description="도메인별로 들어가서 block scenario를 따로 확인할 수 있습니다."
       theme={theme}
-      buildThemeHref={(nextTheme) =>
-        createScenarioHref("/scenarios", searchParams, { theme: nextTheme })
-      }
+      controlsPosition={controlsPosition}
+      setTheme={setTheme}
+      setControlsPosition={setControlsPosition}
     >
       <div className="grid gap-4 sm:grid-cols-2">
         {scenarioDomains.map((domain) => (
@@ -161,7 +238,8 @@ export function ScenarioPreviewIndex() {
 export function ScenarioDomainPreview() {
   const { domainId } = useParams()
   const [searchParams] = useSearchParams()
-  const theme = getPreviewTheme(searchParams)
+  const { theme, setTheme, controlsPosition, setControlsPosition } =
+    useScenarioPreviewPreferences()
   const domain = getScenarioDomain(domainId)
 
   if (!domain) {
@@ -175,9 +253,9 @@ export function ScenarioDomainPreview() {
       title={`${domain.label} Scenarios`}
       description="block별로 나뉜 페이지로 들어가서 각 시나리오를 단독 렌더링할 수 있습니다."
       theme={theme}
-      buildThemeHref={(nextTheme) =>
-        createScenarioHref(`/scenarios/${domain.id}`, searchParams, { theme: nextTheme })
-      }
+      controlsPosition={controlsPosition}
+      setTheme={setTheme}
+      setControlsPosition={setControlsPosition}
     >
       <div className="mb-5">
         <Link
@@ -240,7 +318,8 @@ export function ScenarioDomainPreview() {
 export function ScenarioBlockPreview() {
   const { domainId, blockId } = useParams()
   const [searchParams] = useSearchParams()
-  const theme = getPreviewTheme(searchParams)
+  const { theme, setTheme, controlsPosition, setControlsPosition } =
+    useScenarioPreviewPreferences()
   const domain = getScenarioDomain(domainId)
   const scenarioGroup = getScenarioGroup(domainId, blockId)
   useScenarioDocumentTheme(theme)
@@ -265,13 +344,9 @@ export function ScenarioBlockPreview() {
       <div>{scenarioGroup.render(activeScenario)}</div>
       <ScenarioPreviewControls
         theme={theme}
-        buildThemeHref={(nextTheme) =>
-          createScenarioHref(
-            `/scenarios/${domain.id}/${scenarioGroup.id}`,
-            searchParams,
-            { theme: nextTheme }
-          )
-        }
+        position={controlsPosition}
+        setTheme={setTheme}
+        setPosition={setControlsPosition}
       />
     </main>
   )

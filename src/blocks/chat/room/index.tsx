@@ -61,7 +61,7 @@ export function ChatRoom({ data, className }: ChatRoomProps) {
             type="button"
             variant="ghost"
             size="icon"
-            className="-translate-y-1 rounded-full text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
+            className="-translate-y-1 rounded-full text-brand-green-strong hover:bg-emerald-50 hover:text-emerald-600"
             aria-label="Add attachment"
           >
             <Plus className="size-5" strokeWidth={2.3} />

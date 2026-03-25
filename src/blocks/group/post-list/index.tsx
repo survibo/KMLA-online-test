@@ -188,7 +188,7 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
                     className={cn(
                       "h-10 rounded-full border px-5 text-sm font-semibold shadow-none transition-colors",
                       isActive
-                        ? "border-emerald-300 bg-emerald-300 text-white hover:bg-emerald-400"
+                        ? "border-brand-green-light bg-brand-green-light text-brand-green-foreground hover:bg-emerald-400"
                         : "border-border bg-background/80 text-text-strong hover:bg-muted"
                     )}
                     aria-pressed={isActive}
@@ -244,7 +244,7 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
         <Button
           type="button"
           size="icon"
-          className="pointer-events-auto size-14 rounded-full bg-emerald-400 text-white shadow-[0_14px_32px_rgba(52,211,153,0.35)] hover:bg-emerald-500"
+          className="pointer-events-auto size-14 rounded-full bg-brand-green text-brand-green-foreground shadow-[0_14px_32px_rgba(52,211,153,0.35)] hover:bg-emerald-500"
           aria-label="Create post"
         >
           <Plus className="size-7" strokeWidth={2.2} />

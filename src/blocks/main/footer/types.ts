@@ -1,7 +1,7 @@
 export type MainFooterTabId =
   | "home"
   | "cube"
-  | "feed"
+  | "group"
   | "chat"
   | "profile"
 

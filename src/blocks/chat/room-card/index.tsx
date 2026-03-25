@@ -44,7 +44,7 @@ export function ChatRoomCard({
             {getChatRoomDisplayName(room, currentUserId)}
           </p>
           {room.has_unread ? (
-            <span className="size-3 shrink-0 rounded-full bg-emerald-300" />
+            <span className="size-3 shrink-0 rounded-full bg-brand-green-light" />
           ) : null}
         </div>
 
