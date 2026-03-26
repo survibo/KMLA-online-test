@@ -15,9 +15,7 @@ import { GroupPostDetail } from "@/blocks/group/post-detail"
 import { groupPostDetailScenarios } from "@/blocks/group/post-detail/mock.scenarios"
 import { GroupPostList } from "@/blocks/group/post-list"
 import { groupPostListScenarios } from "@/blocks/group/post-list/mock.scenarios"
-import { MainFooter } from "@/blocks/main/footer"
 import { createMainFooterData, createMainFooterTabs } from "@/blocks/main/footer/mock"
-import { mainFooterScenarios } from "@/blocks/main/footer/mock.scenarios"
 import { MainHeader } from "@/blocks/main/header"
 import { mainHeaderScenarios } from "@/blocks/main/header/mock.scenarios"
 import { MainContentFooter } from "@/blocks/main/content-footer"
@@ -104,13 +102,6 @@ export const scenarioGroups = [
         </div>
       </MainContentFooter>
     ),
-  },
-  {
-    domain: "main",
-    id: "footer",
-    label: "Main Footer",
-    scenarios: mainFooterScenarios,
-    render: (scenario) => <MainFooter data={scenario.data} />,
   },
   {
     domain: "main",

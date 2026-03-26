@@ -20,7 +20,7 @@ export function MainHeaderContentFooter({
     <section className={cn("flex min-h-screen flex-col bg-background", className)}>
       <MainHeader data={data.header} />
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">{children}</div>
-      <MainFooter embedded data={data.footer} />
+      <MainFooter data={data.footer} />
     </section>
   )
 }

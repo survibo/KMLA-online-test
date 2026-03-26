@@ -18,7 +18,7 @@ export function MainContentFooter({
   return (
     <section className={cn("flex min-h-screen flex-col bg-background", className)}>
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">{children}</div>
-      <MainFooter embedded data={data.footer} />
+      <MainFooter data={data.footer} />
     </section>
   )
 }

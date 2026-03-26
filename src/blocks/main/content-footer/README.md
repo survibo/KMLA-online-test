@@ -15,8 +15,9 @@
 ## Rendering Rules
 
 - shell은 `min-h-screen` column layout을 사용한다.
+- shell은 background surface를 한 곳에서만 책임지고, content와 embedded footer를 같은 surface 안에서 조합한다.
 - 본문 영역은 `flex min-h-0 flex-1 flex-col overflow-y-auto`를 가져 footer와 스크롤 책임을 분리하고, 내부 block이 높이를 이어받을 수 있게 한다.
-- footer는 `main/footer`를 `embedded` 모드로 조합한다.
+- footer는 `main/footer`를 shell 내부 navigation으로 조합한다.
 
 ## Files
 

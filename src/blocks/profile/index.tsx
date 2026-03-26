@@ -70,7 +70,7 @@ export function Profile({ data, className }: ProfileProps) {
               <TabsTrigger
                 key={action.id}
                 value={action.id}
-                className="min-w-[6.75rem] rounded-full border border-border bg-background px-5 py-2 font-semibold text-text-strong after:hidden hover:bg-secondary data-active:border-brand-green! data-active:bg-brand-green! data-active:text-brand-green-foreground! data-active:hover:bg-brand-green!"
+                className="min-w-[6rem] rounded-full border border-border bg-background px-5 py-2 font-semibold text-text-strong after:hidden hover:bg-secondary data-active:border-brand-green! data-active:bg-brand-green! data-active:text-brand-green-foreground! data-active:hover:bg-brand-green!"
               >
                 {action.label}
               </TabsTrigger>
