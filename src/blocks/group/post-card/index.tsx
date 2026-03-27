@@ -64,6 +64,7 @@ function GroupPostCardComponent({
           <GroupPostSummary
             post={post}
             timeVariant={timeVariant}
+            bodyCollapsible
             trailing={
               onOverflowMenuClick ? (
                 <GroupPostOverflowMenuButton onClick={onOverflowMenuClick} />

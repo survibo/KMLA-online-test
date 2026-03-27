@@ -47,6 +47,7 @@ export const GroupPostCommentsDrawer = memo(function GroupPostCommentsDrawer({
             <GroupCommentsThread
               commentItems={commentItems}
               postAuthorId={postAuthorId}
+              revealMode="stagger"
             />
           ) : (
             <GroupCommentsEmptyState />

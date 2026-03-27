@@ -39,13 +39,9 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
   )
   const commentsDrawer = useQueryDrawerState({
     queryKey: "comments",
-    sourcePathStateKey: "commentsDrawerSourcePath",
-    sourceIdStateKey: "commentsDrawerPostId",
   })
   const menuDrawer = useQueryDrawerState({
     queryKey: "menu",
-    sourcePathStateKey: "menuDrawerSourcePath",
-    sourceIdStateKey: "menuDrawerPostId",
   })
   const postById = useMemo(
     () => new Map(group.posts.map((post) => [post.id, post])),

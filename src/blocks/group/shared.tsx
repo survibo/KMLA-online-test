@@ -1,4 +1,4 @@
-import { memo, useMemo, useState, type ReactNode } from "react"
+import { memo, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import {
   EllipsisVertical,
   MessageCircle,
@@ -191,9 +191,13 @@ export function GroupPostOverflowMenu() {
 export const GroupPostContent = memo(function GroupPostContent({
   post,
   className,
+  bodyCollapsible = false,
+  bodyDefaultExpanded = false,
 }: {
   post: GroupPost
   className?: string
+  bodyCollapsible?: boolean
+  bodyDefaultExpanded?: boolean
 }) {
   return (
     <div className={cn("flex flex-col gap-5", className)}>
@@ -204,7 +208,11 @@ export const GroupPostContent = memo(function GroupPostContent({
       ) : null}
 
       {post.content ? (
-        <GroupPostBodyText content={post.content} />
+        <GroupPostBodyText
+          content={post.content}
+          collapsible={bodyCollapsible}
+          defaultExpanded={bodyDefaultExpanded}
+        />
       ) : null}
 
       <GroupPostGallery
@@ -217,10 +225,83 @@ export const GroupPostContent = memo(function GroupPostContent({
 
 function GroupPostBodyText({
   content,
+  collapsible = false,
+  defaultExpanded = false,
 }: {
   content: string
+  collapsible?: boolean
+  defaultExpanded?: boolean
 }) {
-  return <p className="whitespace-pre-line break-keep text-text-soft">{content}</p>
+  const contentRef = useRef<HTMLParagraphElement | null>(null)
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded)
+  const [canExpand, setCanExpand] = useState(false)
+
+  useEffect(() => {
+    if (!collapsible) return
+
+    const node = contentRef.current
+
+    if (!node) return
+
+    function measureOverflow() {
+      setCanExpand((currentCanExpand) =>
+        currentCanExpand || node.scrollHeight > node.clientHeight + 1
+      )
+    }
+
+    measureOverflow()
+
+    if (typeof ResizeObserver === "undefined" || isExpanded) {
+      return
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      measureOverflow()
+    })
+
+    resizeObserver.observe(node)
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [collapsible, content, isExpanded])
+
+  useEffect(() => {
+    setIsExpanded(defaultExpanded)
+    setCanExpand(false)
+  }, [content, defaultExpanded])
+
+  if (!collapsible) {
+    return <p className="whitespace-pre-line break-keep text-text-soft">{content}</p>
+  }
+
+  return (
+    <button
+      type="button"
+      className="block w-full cursor-pointer text-left"
+      onClick={() => {
+        if (!canExpand) return
+
+        setIsExpanded((currentExpanded) => !currentExpanded)
+      }}
+      aria-expanded={canExpand ? isExpanded : undefined}
+    >
+      <p
+        ref={contentRef}
+        className={cn(
+          "whitespace-pre-line break-keep text-text-soft transition-[max-height] duration-200 ease-out",
+          !isExpanded && "line-clamp-3"
+        )}
+      >
+        {content}
+      </p>
+      {canExpand ? (
+        <span className="mt-1 block text-sm font-medium text-text-faint">
+          {isExpanded ? "접기" : "더보기"}
+        </span>
+      ) : null}
+    </button>
+  )
 }
 
 export const GroupPostGallery = memo(function GroupPostGallery({
@@ -354,6 +435,8 @@ export const GroupPostSummary = memo(function GroupPostSummary({
   showOverflowMenu = true,
   onCommentClick,
   className,
+  bodyCollapsible = false,
+  bodyDefaultExpanded = false,
 }: {
   post: GroupPost
   timeVariant?: "absolute" | "relative"
@@ -362,6 +445,8 @@ export const GroupPostSummary = memo(function GroupPostSummary({
   showOverflowMenu?: boolean
   onCommentClick?: () => void
   className?: string
+  bodyCollapsible?: boolean
+  bodyDefaultExpanded?: boolean
 }) {
   return (
     <div className={cn("space-y-3", className)}>
@@ -373,7 +458,11 @@ export const GroupPostSummary = memo(function GroupPostSummary({
         trailing={trailing ?? (showOverflowMenu ? <GroupPostOverflowMenu /> : null)}
       />
       <div className="space-y-0.5">
-        <GroupPostContent post={post} />
+        <GroupPostContent
+          post={post}
+          bodyCollapsible={bodyCollapsible}
+          bodyDefaultExpanded={bodyDefaultExpanded}
+        />
         <GroupPostStats post={post} onCommentClick={onCommentClick} />
       </div>
     </div>

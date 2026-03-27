@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 const FONT_SCALE_STORAGE_KEY = "app-font-scale"
 const DEFAULT_FONT_SCALE = 0.97
-const FONT_SCALE_STEP = 0.03
+const FONT_SCALE_STEP = 0.05
 
 export const fontScaleOptions = [
   { value: DEFAULT_FONT_SCALE - FONT_SCALE_STEP, label: "A-" },

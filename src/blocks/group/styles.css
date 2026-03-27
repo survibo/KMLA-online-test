@@ -1,0 +1,30 @@
+.group-comments-entry {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: group-comments-entry-reveal 280ms ease-out forwards;
+  will-change: opacity, transform;
+}
+
+.group-comments-replies {
+  overflow: hidden;
+}
+
+@keyframes group-comments-entry-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group-comments-entry {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}

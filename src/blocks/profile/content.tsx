@@ -1,5 +1,3 @@
-import { Mail, Phone } from "lucide-react"
-
 import { TabsContent } from "@/components/ui/tabs"
 
 import type { ProfileData } from "./types"
@@ -13,8 +11,8 @@ export function ProfileContent({ data }: ProfileContentProps) {
     <>
       <TabsContent value="info" className="mt-8 flex-1">
         <div className="grid gap-8">
-          <ProfileField label="전화번호" value={data.phoneNumber} icon={Phone} />
-          <ProfileField label="이메일" value={data.email} icon={Mail} />
+          <ProfileField label="학번" value={data.studentNumber} />
+          <ProfileField label="기수" value={data.gradeLabel} />
         </div>
       </TabsContent>
 
@@ -46,18 +44,13 @@ export function ProfileContent({ data }: ProfileContentProps) {
 function ProfileField({
   label,
   value,
-  icon: Icon,
 }: {
   label: string
   value: string
-  icon?: typeof Phone
 }) {
   return (
     <section className="space-y-2">
-      <div className="flex items-center gap-2">
-        {Icon ? <Icon className="size-4 text-text-faint" strokeWidth={2.1} /> : null}
-        <h2 className="text-[1.15rem] font-semibold tracking-tight text-text-strong">{label}</h2>
-      </div>
+      <h2 className="text-[1.15rem] font-semibold tracking-tight text-text-strong">{label}</h2>
       <p className="text-lg leading-7 text-text-soft">{value}</p>
     </section>
   )

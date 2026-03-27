@@ -31,8 +31,6 @@ export function GroupPostDetail({
   const [composerOffset, setComposerOffset] = useState(0)
   const menuDrawer = useQueryDrawerState({
     queryKey: "menu",
-    sourcePathStateKey: "menuDrawerSourcePath",
-    sourceIdStateKey: "menuDrawerPostId",
   })
   const openMenuPostId = menuDrawer.openId
   const isMenuOpen = openMenuPostId === post.id

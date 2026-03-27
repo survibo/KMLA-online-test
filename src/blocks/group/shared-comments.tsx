@@ -1,6 +1,8 @@
 import { memo, useMemo, useRef, useState } from "react"
 import { MessageCircle, SendHorizontal, ThumbsUp } from "lucide-react"
 
+import "./styles.css"
+
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -11,6 +13,17 @@ import { GroupPostAvatar } from "@/blocks/group/shared"
 import { formatRelativeTime } from "@/lib/datetime"
 import { cn } from "@/lib/utils"
 import type { GroupComment } from "@/blocks/group/types"
+
+const COMMENT_REVEAL_BASE_DELAY_MS = 60
+const COMMENT_REVEAL_STEP_MS = 45
+const COMMENT_REVEAL_MAX_STEPS = 6
+
+function getCommentRevealDelay(index: number) {
+  return `${
+    COMMENT_REVEAL_BASE_DELAY_MS +
+    Math.min(index, COMMENT_REVEAL_MAX_STEPS) * COMMENT_REVEAL_STEP_MS
+  }ms`
+}
 
 type GroupCommentRowProps = GroupCommentMeta & {
   postAuthorId?: string
@@ -111,10 +124,12 @@ export function GroupCommentsThread({
   commentItems = [],
   postAuthorId,
   className,
+  revealMode = "none",
 }: {
   commentItems?: GroupComment[]
   postAuthorId?: string
   className?: string
+  revealMode?: "none" | "stagger"
 }) {
   const { topLevelComments, directRepliesByParentId } = useMemo(
     () => createGroupCardCommentThread(commentItems),
@@ -158,7 +173,15 @@ export function GroupCommentsThread({
         const directReplies = directRepliesByParentId.get(item.id) ?? []
 
         return (
-          <div key={item.id ?? `${item.author.name}-${index}`}>
+          <div
+            key={item.id ?? `${item.author.name}-${index}`}
+            className={cn(revealMode === "stagger" && "group-comments-entry")}
+            style={
+              revealMode === "stagger"
+                ? { animationDelay: getCommentRevealDelay(index) }
+                : undefined
+            }
+          >
             <GroupCommentRow
               item={item}
               postAuthorId={postAuthorId}
@@ -175,7 +198,7 @@ export function GroupCommentsThread({
             {directReplies.length > 0 ? (
               <div
                 className={cn(
-                  "grid transition-[grid-template-rows,opacity,transform] duration-250 ease-out",
+                  "group-comments-replies grid transition-[grid-template-rows,opacity,transform] duration-250 ease-out",
                   isExpanded
                     ? "mt-3 grid-rows-[1fr] opacity-100 translate-y-0"
                     : "grid-rows-[0fr] opacity-0 -translate-y-1"
@@ -185,12 +208,29 @@ export function GroupCommentsThread({
                   <div className="flex flex-col gap-5 pt-0.5">
                     {directReplies.map(
                       ({ item: replyItem, ...replyMeta }, replyIndex) => (
-                        <GroupCommentRow
+                        <div
                           key={replyItem.id ?? `${replyItem.author.name}-${replyIndex}`}
-                          item={replyItem}
-                          postAuthorId={postAuthorId}
-                          {...replyMeta}
-                        />
+                          className={cn(
+                            revealMode === "stagger" &&
+                              isExpanded &&
+                              "group-comments-entry"
+                          )}
+                          style={
+                            revealMode === "stagger" && isExpanded
+                              ? {
+                                  animationDelay: getCommentRevealDelay(
+                                    index + replyIndex + 1
+                                  ),
+                                }
+                              : undefined
+                          }
+                        >
+                          <GroupCommentRow
+                            item={replyItem}
+                            postAuthorId={postAuthorId}
+                            {...replyMeta}
+                          />
+                        </div>
                       )
                     )}
                   </div>

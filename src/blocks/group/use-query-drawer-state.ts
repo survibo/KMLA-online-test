@@ -2,19 +2,30 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 
 type QueryDrawerStateOptions = {
   queryKey: string
-  sourcePathStateKey: string
-  sourceIdStateKey: string
 }
 
-export function useQueryDrawerState({
-  queryKey,
-  sourcePathStateKey,
-  sourceIdStateKey,
-}: QueryDrawerStateOptions) {
+export function useQueryDrawerState({ queryKey }: QueryDrawerStateOptions) {
   const location = useLocation()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const openId = searchParams.get(queryKey)
+  const drawerHistoryStateKey = `__drawer_${queryKey}`
+
+  function getNextState(nextId: string | null) {
+    const nextState =
+      location.state && typeof location.state === "object"
+        ? { ...location.state }
+        : {}
+
+    if (nextId) {
+      nextState[drawerHistoryStateKey] = true
+      return nextState
+    }
+
+    delete nextState[drawerHistoryStateKey]
+
+    return Object.keys(nextState).length > 0 ? nextState : null
+  }
 
   function updateQuery(nextId: string | null, replace = false) {
     const nextSearchParams = new URLSearchParams(searchParams)
@@ -34,13 +45,7 @@ export function useQueryDrawerState({
       },
       {
         replace,
-        state: nextId
-          ? {
-              ...location.state,
-              [sourcePathStateKey]: `${location.pathname}${location.search}`,
-              [sourceIdStateKey]: nextId,
-            }
-          : location.state,
+        state: getNextState(nextId),
       }
     )
   }
@@ -54,15 +59,8 @@ export function useQueryDrawerState({
   function close() {
     if (!openId) return
 
-    const sourcePath =
-      typeof location.state?.[sourcePathStateKey] === "string"
-        ? location.state[sourcePathStateKey]
-        : null
-    const currentPath = `${location.pathname}${location.search}`
-    const isInternalSourcePath = Boolean(sourcePath?.startsWith("/"))
-
-    if (sourcePath && sourcePath !== currentPath && isInternalSourcePath) {
-      navigate(sourcePath, { replace: true, state: location.state })
+    if (location.state?.[drawerHistoryStateKey] === true) {
+      navigate(-1)
       return
     }
 
