@@ -30,7 +30,7 @@ export const GroupPostCommentsDrawer = memo(function GroupPostCommentsDrawer({
 }: GroupPostCommentsDrawerProps) {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="mx-auto flex w-full flex-col rounded-t-[1.75rem] bg-background data-[vaul-drawer-direction=bottom]:min-h-[60vh] data-[vaul-drawer-direction=bottom]:max-h-[90vh]">
+      <DrawerContent className="mx-auto flex w-full flex-col rounded-t-[1.75rem] bg-background data-[vaul-drawer-direction=bottom]:h-[95dvh] data-[vaul-drawer-direction=bottom]:max-h-[95dvh]">
         <DrawerHeader className="px-4 pb-3 pt-5 text-left sm:px-6">
           <DrawerTitle className="text-lg font-semibold text-text-strong">
             댓글

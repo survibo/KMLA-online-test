@@ -1,4 +1,4 @@
-import { memo, useState, type ReactNode } from "react"
+import { memo, useMemo, useState, type ReactNode } from "react"
 import {
   EllipsisVertical,
   MessageCircle,
@@ -24,6 +24,8 @@ import type {
   GroupPostImage,
   GroupUser,
 } from "@/blocks/group/types"
+
+const EMPTY_POST_IMAGES: GroupPostImage[] = []
 
 export function getGroupInitials(name: string) {
   return name
@@ -222,7 +224,7 @@ function GroupPostBodyText({
 }
 
 export const GroupPostGallery = memo(function GroupPostGallery({
-  images = [],
+  images = EMPTY_POST_IMAGES,
   altFallback = "Post attachment preview",
 }: {
   images?: GroupPostImage[]
@@ -230,7 +232,10 @@ export const GroupPostGallery = memo(function GroupPostGallery({
 }) {
   const location = useLocation()
   const navigate = useNavigate()
-  const sortedImages = [...images].sort((a, b) => a.sort_order - b.sort_order)
+  const sortedImages = useMemo(
+    () => [...images].sort((a, b) => a.sort_order - b.sort_order),
+    [images]
+  )
   const featuredImage = sortedImages[0]
 
   if (!featuredImage) return null
@@ -281,11 +286,28 @@ export const GroupPostStats = memo(function GroupPostStats({
   post: GroupPost
   onCommentClick?: () => void
 }) {
-  const likes = post.reaction_count ?? post.post_reactions?.length ?? 0
-  const comments =
-    post.comment_count ??
-    post.post_comments?.filter((comment) => comment.parent_id === null).length ??
-    0
+  const { likes, comments } = useMemo(() => {
+    const likesCount = post.reaction_count ?? post.post_reactions?.length ?? 0
+    const fallbackCommentCount =
+      post.post_comments?.reduce(
+        (count, comment) =>
+          comment.parent_id === null || comment.parent_id === undefined
+            ? count + 1
+            : count,
+        0
+      ) ?? 0
+    const commentsCount = post.comment_count ?? fallbackCommentCount
+
+    return {
+      likes: likesCount,
+      comments: commentsCount,
+    }
+  }, [
+    post.comment_count,
+    post.post_comments,
+    post.post_reactions,
+    post.reaction_count,
+  ])
 
   return (
     <div className="-ml-1.5 flex items-center gap-0.5 text-sm text-text-faint">

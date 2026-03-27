@@ -86,11 +86,4 @@ function GroupPostCardComponent({
   )
 }
 
-export const GroupPostCard = memo(
-  GroupPostCardComponent,
-  (prevProps, nextProps) =>
-    prevProps.post === nextProps.post &&
-    prevProps.timeVariant === nextProps.timeVariant &&
-    prevProps.className === nextProps.className &&
-    prevProps.commentsOpen === nextProps.commentsOpen
-)
+export const GroupPostCard = memo(GroupPostCardComponent)

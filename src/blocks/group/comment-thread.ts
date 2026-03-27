@@ -85,7 +85,9 @@ function createCommentMeta(
 
 export function createGroupCardCommentThread(commentItems: GroupComment[]) {
   const lookup = createGroupCommentLookup(commentItems)
-  const rootComments = lookup.sortedComments.filter((item) => item.parent_id === null)
+  const rootComments = lookup.sortedComments.filter(
+    (item) => item.parent_id === null || item.parent_id === undefined
+  )
   const topLevelComments = rootComments.map((comment) =>
     createCommentMeta(comment, 0, lookup)
   )

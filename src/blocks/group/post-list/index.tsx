@@ -47,16 +47,16 @@ export function GroupPostList({ group, className }: GroupPostListProps) {
     sourcePathStateKey: "menuDrawerSourcePath",
     sourceIdStateKey: "menuDrawerPostId",
   })
+  const postById = useMemo(
+    () => new Map(group.posts.map((post) => [post.id, post])),
+    [group.posts]
+  )
   const openCommentsPostId = commentsDrawer.openId
-  const activeCommentsPost =
-    posts.find((post) => post.id === openCommentsPostId) ??
-    group.posts.find((post) => post.id === openCommentsPostId) ??
-    null
+  const activeCommentsPost = openCommentsPostId
+    ? postById.get(openCommentsPostId) ?? null
+    : null
   const openMenuPostId = menuDrawer.openId
-  const activeMenuPost =
-    posts.find((post) => post.id === openMenuPostId) ??
-    group.posts.find((post) => post.id === openMenuPostId) ??
-    null
+  const activeMenuPost = openMenuPostId ? postById.get(openMenuPostId) ?? null : null
 
   function handleCommentsOpen(postId: string) {
     commentsDrawer.open(postId)

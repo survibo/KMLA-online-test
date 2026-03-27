@@ -59,9 +59,10 @@ export function useQueryDrawerState({
         ? location.state[sourcePathStateKey]
         : null
     const currentPath = `${location.pathname}${location.search}`
+    const isInternalSourcePath = Boolean(sourcePath?.startsWith("/"))
 
-    if (sourcePath && sourcePath !== currentPath) {
-      navigate(-1)
+    if (sourcePath && sourcePath !== currentPath && isInternalSourcePath) {
+      navigate(sourcePath, { replace: true, state: location.state })
       return
     }
 

@@ -120,28 +120,41 @@ export function GroupCommentsThread({
     () => createGroupCardCommentThread(commentItems),
     [commentItems]
   )
-  const [expandedCommentIds, setExpandedCommentIds] = useState<string[]>([])
+  const [expandedCommentIds, setExpandedCommentIds] = useState<Set<string>>(
+    () => new Set<string>()
+  )
 
   if (topLevelComments.length === 0) return null
 
   function toggleReplies(commentId: string) {
-    setExpandedCommentIds((currentIds) =>
-      currentIds.includes(commentId)
-        ? currentIds.filter((id) => id !== commentId)
-        : [...currentIds, commentId]
-    )
+    setExpandedCommentIds((currentIds) => {
+      const nextIds = new Set(currentIds)
+
+      if (nextIds.has(commentId)) {
+        nextIds.delete(commentId)
+      } else {
+        nextIds.add(commentId)
+      }
+
+      return nextIds
+    })
   }
 
   function openReplies(commentId: string) {
-    setExpandedCommentIds((currentIds) =>
-      currentIds.includes(commentId) ? currentIds : [...currentIds, commentId]
-    )
+    setExpandedCommentIds((currentIds) => {
+      if (currentIds.has(commentId)) return currentIds
+
+      const nextIds = new Set(currentIds)
+      nextIds.add(commentId)
+
+      return nextIds
+    })
   }
 
   return (
     <div className={cn("flex flex-col gap-5", className)}>
       {topLevelComments.map(({ item, ...meta }, index) => {
-        const isExpanded = expandedCommentIds.includes(item.id)
+        const isExpanded = expandedCommentIds.has(item.id)
         const directReplies = directRepliesByParentId.get(item.id) ?? []
 
         return (
